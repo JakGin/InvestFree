@@ -7,7 +7,6 @@ class User(AbstractUser):
     debt = models.FloatField(default=0.00)
     watchlist = models.ManyToManyField("Stock", blank=True, related_name="watchlist")
     portfolio = models.ManyToManyField("Stock", blank=True, related_name="portfolio")
-    pass
 
 
 class Stock(models.Model):
