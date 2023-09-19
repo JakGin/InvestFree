@@ -30,4 +30,4 @@ class StockView(APIView):
         serializer = StockSerializer(data=stock)
         if serializer.is_valid(raise_exception=True):
             stock_saved = serializer.save()
-        return Response({"success": "Stock '{}' created successfully".format(stock_saved.name)})
+        return Response({"success": f"Stock '{stock_saved.name}' created successfully"})
