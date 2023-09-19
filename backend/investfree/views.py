@@ -9,7 +9,7 @@ class UserView(APIView):
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
-        return Response({"users": serializer.data})
+        return Response(serializer.data)
 
     def post(self, request):
         user = request.data
@@ -23,7 +23,7 @@ class StockView(APIView):
     def get(self, request):
         stocks = Stock.objects.all()
         serializer = StockSerializer(stocks, many=True)
-        return Response({"stocks": serializer.data})
+        return Response(serializer.data)
 
     def post(self, request):
         stock = request.data
