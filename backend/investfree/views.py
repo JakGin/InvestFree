@@ -12,7 +12,7 @@ class UserView(APIView):
         return Response({"users": serializer.data})
 
     def post(self, request):
-        user = request.data.get('user')
+        user = request.data
         serializer = UserSerializer(data=user)
         if serializer.is_valid(raise_exception=True):
             user_saved = serializer.save()
@@ -26,7 +26,7 @@ class StockView(APIView):
         return Response({"stocks": serializer.data})
 
     def post(self, request):
-        stock = request.data.get('stock')
+        stock = request.data
         serializer = StockSerializer(data=stock)
         if serializer.is_valid(raise_exception=True):
             stock_saved = serializer.save()

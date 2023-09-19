@@ -17,4 +17,4 @@ class StockSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields = ["__all__"]
+        fields = ["user", "stock", "quantity", "price"]
