@@ -3,9 +3,11 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+
+
     class Meta:
         model = User
-        fields = ["username", "wallet_status", "debt"]
+        fields = ["username", "email", "wallet_status", "debt"]
 
 
 class StockSerializer(serializers.ModelSerializer):
