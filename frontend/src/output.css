@@ -534,13 +534,17 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.h-40 {
+  height: 10rem;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
 .bg-cyan-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(8 145 178 / var(--tw-bg-opacity));
-}
-
-.stroke-yellow-300 {
-  stroke: #fde047;
 }
 
 .text-3xl {
