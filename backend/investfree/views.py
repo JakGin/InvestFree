@@ -84,18 +84,17 @@ class LogoutView(APIView):
 
 class RegisterView(APIView):
     def post(self, request):
-        username = request.data["username"]
-        email = request.data["email"]
+        try:
+            username = request.data["username"]
+            email = request.data["email"]
+            password = request.data["password"]
+            confirmation = request.data["confirmation"]
+        except KeyError:
+            return Response({"error": "username, email, password, and confirmation required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        password = request.data["password"]
-
-        check = validate_register(username, email, password)
+        check = validate_register(username, email, password, confirmation)
         if "error" in check:
             return Response({"error": check["error"]}, status=status.HTTP_400_BAD_REQUEST)
-
-        confirmation = request.data["confirmation"]
-        if password != confirmation:
-            return Response({"error": "Passwords don't match"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             user = User.objects.create_user(username, email, password)

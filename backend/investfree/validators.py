@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 from profanity_check import predict
 
 
-def validate_register(username, email, password):
-    if username == "" or email == "" or password == "":
+def validate_register(username, email, password, confirmation):
+    if username == "" or email == "" or password == "" or confirmation == "":
         return {"error": "Please fill out all fields"}
     
     if predict([username])[0] == 1:
@@ -21,6 +21,9 @@ def validate_register(username, email, password):
     
     if len(password) < 8:
         return {"error": "Password must be at least 8 characters long"}
+    
+    if password != confirmation:
+        return {"error": "Passwords don't match"}
     
     return {"success": "Registration successful"}
     
