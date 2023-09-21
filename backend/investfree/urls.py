@@ -4,13 +4,13 @@ from . import views
 
 urlpatterns = [
     # Auth
-    path("register/", views.register, name="register"),
-    path("login/", views.login_view, name="login"),
-    path("logout/", views.logout_view, name="logout"),
+    path("api/register/", views.RegisterView.as_view(), name="register"),
+    path("api/login/", views.LoginView.as_view(), name="login"),
+    path("api/logout/", views.LogoutView.as_view(), name="logout"),
 
-    # API
+    # Main
     path("api/users/", views.UsersView.as_view(), name="users"),
-    path("api/users/<str:username>/", views.UserView.as_view(), name="user"),
+    path("api/user", views.UserView.as_view(), name="user"),
     path("api/stocks/", views.StockView.as_view(), name="stocks")
 ]
 

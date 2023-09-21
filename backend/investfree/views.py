@@ -10,6 +10,7 @@ from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
+from .validators import validate_register
 
 
 class UsersView(APIView):
@@ -28,9 +29,12 @@ class UsersView(APIView):
     
 class UserView(APIView):
     ''' Get information about a specific user '''
-    def get(self, request, username):
+    def get(self, request):
+        if request.user.is_authenticated == False:
+            return Response({"error": "You must be logged in"}, status=status.HTTP_401_UNAUTHORIZED)
+        
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(username=request.user.username)
         except User.DoesNotExist:
             return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
         
@@ -55,37 +59,44 @@ class StockView(APIView):
         return Response({"success": f"Stock '{stock_saved.name}' created successfully"})
 
 
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
+class LoginView(APIView):
+    def post(self, request):
+        try:
+            username = request.data["username"]
+            password = request.data["password"]
+        except KeyError:
+            return Response({"error": "username and password required"}, status=status.HTTP_400_BAD_REQUEST)
+
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             return Response({"success": f"User '{user.username}' logged in successfully"})
         else:
-            return Response({"error": "Invalid username and/or password"}, status=status.HTTP_401_UNAUTHORIZED)   
-    else:
-        return Response({"error": "Only POST request allowed"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid username and/or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-def logout_view(request):
-    logout(request)
-    return Response({"success": "User logged out successfully"})
+class LogoutView(APIView):
+    def post(self, request):
+        logout(request)
+        return Response({"success": "User logged out successfully"})
 
 
-def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
+class RegisterView(APIView):
+    def post(self, request):
+        username = request.data["username"]
+        email = request.data["email"]
 
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
+        password = request.data["password"]
+
+        check = validate_register(username, email, password)
+        if "error" in check:
+            return Response({"error": check["error"]}, status=status.HTTP_400_BAD_REQUEST)
+
+        confirmation = request.data["confirmation"]
         if password != confirmation:
             return Response({"error": "Passwords don't match"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
@@ -93,5 +104,3 @@ def register(request):
             return Response({"error": "Username already taken"}, status=status.HTTP_400_BAD_REQUEST)
         login(request, user)
         return Response({"success": f"User '{user.username}' created successfully"})
-    else:
-        return Response({"error": "Only POST request allowed"}, status=status.HTTP_400_BAD_REQUEST)

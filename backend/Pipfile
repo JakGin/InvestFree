@@ -8,6 +8,7 @@ django = "*"
 load-dotenv = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
+alt-profanity-check = "*"
 
 [dev-packages]
 
