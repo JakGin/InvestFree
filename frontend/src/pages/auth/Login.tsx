@@ -8,6 +8,7 @@ const Login = ({ user, setUser }) => {
         username: event.target.username.value,
         password: event.target.password.value,
       }),
+      credentials: "include",
     });
 
     const data = await response.json();

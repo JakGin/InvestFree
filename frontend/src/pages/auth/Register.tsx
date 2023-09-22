@@ -10,6 +10,7 @@ const Register = () => {
         password: event.target.password.value,
         confirmation: event.target.confirmation.value,
       }),
+      credentials: "include",
     });
 
     const data = await response.json();
@@ -18,13 +19,18 @@ const Register = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="Username" required />
-        <input type="email" name="email" placeholder="Email" required/>
-        <input type="password" name="password" placeholder="Password" required />
-        <input type="password" name="confirmation" placeholder="Password confirmation" required />
-        <input type="submit" value="Register" />
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <input
+        type="password"
+        name="confirmation"
+        placeholder="Password confirmation"
+        required
+      />
+      <input type="submit" value="Register" />
     </form>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

@@ -18,7 +18,7 @@ function App() {
       <Login user={user} setUser={setUser} />
       <LogoutButton user={user} setUser={setUser} >Logout</LogoutButton>
 
-      <UserInfo user={user} setUser={setUser} />
+      {/* <UserInfo user={user} setUser={setUser} /> */}
     </>
   );
 }
