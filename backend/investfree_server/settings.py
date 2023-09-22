@@ -60,7 +60,10 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny',]}
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ORIGIN = [
+    "http://localhost:5173",
+]
 
 
 ROOT_URLCONF = 'investfree_server.urls'
