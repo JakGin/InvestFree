@@ -1,9 +1,16 @@
-const Login = ({ user, setUser }) => {
+import { getCookie } from "/src/utils/cookies.tsx";
+
+const Login = () => {
   async function handleSubmit(event: any) {
+    console.log("login button" + " " + getCookie("csrftoken"))
+
     event.preventDefault();
     const response = await fetch(`${import.meta.env.VITE_API_URL}login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
       body: JSON.stringify({
         username: event.target.username.value,
         password: event.target.password.value,
@@ -12,12 +19,6 @@ const Login = ({ user, setUser }) => {
     });
 
     const data = await response.json();
-
-    if (response.ok) {
-      setUser((userData) => ({ isAuthenticated: true }));
-    } else {
-      setUser((userData) => ({ isAuthenticated: false }));
-    }
 
     console.log(data);
   }

@@ -4,9 +4,22 @@ import Register from "/src/pages/auth/register";
 import logo from "/src/assets/logo.png";
 import LogoutButton from "/src/components/LogoutButton"
 import UserInfo from "./components/UserInfo";
+import { getCookie } from "/src/utils/cookies.tsx";
 
 function App() {
-  const [user, setUser] = useState({isAuthenticated: false});
+  function fetchUser() {
+    fetch(`${import.meta.env.VITE_API_URL}user`, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      });
+  }
 
   return (
     <>
@@ -14,10 +27,11 @@ function App() {
       <h1 className="text-3xl font-bold underline bg-cyan-600">
         This is app.tsx
       </h1>
-      <Register user={user} setUser={setUser} />
-      <Login user={user} setUser={setUser} />
-      <LogoutButton user={user} setUser={setUser} >Logout</LogoutButton>
+      <Register />
+      <Login />
+      <LogoutButton>Logout</LogoutButton>
 
+      <button onClick={fetchUser}>Click to get user</button>
       {/* <UserInfo user={user} setUser={setUser} /> */}
     </>
   );

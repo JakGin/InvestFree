@@ -1,9 +1,14 @@
+import { getCookie } from "/src/utils/cookies.tsx";
+
 const Register = () => {
   async function handleSubmit(event: any) {
     event.preventDefault();
     const response = await fetch(`${import.meta.env.VITE_API_URL}register`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
       body: JSON.stringify({
         username: event.target.username.value,
         email: event.target.email.value,

@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
+import { getCookie } from "/src/utils/cookies.tsx";
 
-const UserInfo = ({ user, setUser }) => {
+const UserInfo = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   async function getUserInfo() {
     try {
       setLoading(true);
-      const response = await fetch(`${import.meta.env.VITE_API_URL}user`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}user`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        credentials: "include",
+      });
       if (!response.ok) {
         throw new Error("Not authorized");
       }
