@@ -1,4 +1,4 @@
-import { getCookie } from "/src/utils/cookies.tsx";
+import { getCookie } from "/src/utils/cookies";
 
 const LogoutButton = ({ children }) => { 
   async function logout() {

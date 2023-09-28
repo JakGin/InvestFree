@@ -4,7 +4,7 @@ import Register from "/src/pages/auth/register";
 import logo from "/src/assets/logo.png";
 import LogoutButton from "/src/components/LogoutButton"
 import UserInfo from "./components/UserInfo";
-import { getCookie } from "/src/utils/cookies.tsx";
+import { getCookie } from "/src/utils/cookies";
 
 function App() {
   function fetchUser() {
@@ -23,8 +23,8 @@ function App() {
 
   return (
     <>
-      <img src={logo} alt="logo" className="w-40 h-40" />
-      <h1 className="text-3xl font-bold underline bg-cyan-600">
+      <img src={logo} alt="logo" />
+      <h1>
         This is app.tsx
       </h1>
       <Register />

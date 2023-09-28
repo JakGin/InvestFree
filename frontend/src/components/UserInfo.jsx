@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getCookie } from "/src/utils/cookies.tsx";
+import { getCookie } from "/src/utils/cookies";
 
 const UserInfo = () => {
   const [loading, setLoading] = useState(true);
