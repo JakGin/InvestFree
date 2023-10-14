@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "/src/app.css";
+import Logout from "/src/components/auth/Logout";
 
 const User = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -28,6 +29,7 @@ const User = () => {
 
   return (
     <div className="User--container">
+      <Logout />
       <h1>User Page Here</h1>
     </div>
   );

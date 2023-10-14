@@ -19,7 +19,6 @@ function App() {
           <Route path="/user" element={<User />} />
           {/* <Route path="/register" element={<Register />} /> */}
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/logout" element={<Logout />} /> */}
         </Routes>
       </BrowserRouter>
     </div>
