@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "/src/app.css";
 
-const Home = () => {
+const User = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -32,4 +32,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default User;
