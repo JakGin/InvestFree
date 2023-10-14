@@ -13,14 +13,16 @@ axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/user" element={<User />} />
-        {/* <Route path="/register" element={<Register />} /> */}
-        <Route path="/login" element={<Login />} />
-        {/* <Route path="/logout" element={<Logout />} /> */}
-      </Routes>
-    </BrowserRouter>
+    <div className="App--container">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/user" element={<User />} />
+          {/* <Route path="/register" element={<Register />} /> */}
+          <Route path="/login" element={<Login />} />
+          {/* <Route path="/logout" element={<Logout />} /> */}
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
