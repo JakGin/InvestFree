@@ -1,33 +1,34 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "/src/app.css";
 
 const User = () => {
-  const [message, setMessage] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function authenticate() {
+    async function getUser() {
       try {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/home/`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        setMessage(data.message);
-      } catch (e) {
-        console.log("not auth");
+        await axios.get("/user/");
+        setLoggedIn(true)
+      } catch (error) {
+        console.log(error);
+        navigate("/login");
       }
     }
 
-    authenticate();
+    getUser();
   }, []);
 
+  if (!loggedIn) {
+    return <p>Checking credentials ...</p>;
+  }
+
   return (
-    <div className="Home--container">
-      <h3>Hi {message}</h3>
+    <div className="User--container">
+      <h1>User Page Here</h1>
     </div>
   );
 };

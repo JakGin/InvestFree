@@ -1,65 +1,31 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
+function Login() {
   const navigate = useNavigate();
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const user = {
-      username: username,
-      password: password,
+      username: event.target[0].value,
+      password: event.target[1].value,
     };
 
-    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/token/`, user, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    });
-
-    navigate("/");
+    try {
+      await axios.post("/login/", user);
+      navigate("/user");
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
-    <div className="Auth-form-container">
-      <form className="Auth-form" onSubmit={submit}>
-        <div className="Auth-form-content">
-          <h3 className="Auth-form-title">Sign In</h3>
-          <div className="form-group mt-3">
-            <label>Username</label>
-            <input
-              className="form-control mt-1"
-              placeholder="Enter Username"
-              name="username"
-              type="text"
-              value={username}
-              required
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div className="form-group mt-3">
-            <label>Password</label>
-            <input
-              name="password"
-              type="password"
-              className="form-control mt-1"
-              placeholder="Enter password"
-              value={password}
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="d-grid gap-2 mt-3">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </div>
-        </div>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input type="text" placeholder="Username" required />
+        <input type="password" placeholder="Password" required />
+        <input type="submit" value="Login" />
       </form>
     </div>
   );
