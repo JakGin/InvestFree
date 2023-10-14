@@ -1,105 +1,54 @@
-from django.shortcuts import render
-from .models import User, Stock, Transaction
-from .serializers import UserSerializer, StockSerializer, TransactionSerializer
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.db import IntegrityError
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import permissions, status
 
-from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-
-from .validators import validate_register
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
+from .models import User, Stock, Transaction
+from .validations import validate_user_data
 
 
-class UsersView(APIView):
-    def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserRegister(APIView):
+    permissions_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        user = request.data
-        serializer = UserSerializer(data=user)
+        clean_data = validate_user_data(request.data)
+        serializer = UserRegisterSerializer(data=clean_data)
         if serializer.is_valid(raise_exception=True):
-            user_saved = serializer.save()
-        return Response({"success": f"User '{user_saved.username}' created successfully"})
-    
-    
-class UserView(APIView):
-    ''' Get information about a specific user '''
-    def get(self, request):
-        if request.user.is_authenticated == False:
-            return Response({"error": "You must be logged in"}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        try:
-            user = User.objects.get(username=request.user.username)
-        except User.DoesNotExist:
-            return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
-        
-        if (request.user != user):
-            return Response({"error": "You do not have permission to view this user"}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            user = serializer.create(clean_data)
+            print(f"user {user}")
+            if user:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class StockView(APIView):
-    def get(self, request):
-        stocks = Stock.objects.all()
-        serializer = StockSerializer(stocks, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserLogin(APIView):
+    permissions_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)
 
     def post(self, request):
-        stock = request.data
-        serializer = StockSerializer(data=stock)
+        clean_data = validate_user_data(request.data)
+        serializer = UserLoginSerializer(data=clean_data)
         if serializer.is_valid(raise_exception=True):
-            stock_saved = serializer.save()
-        return Response({"success": f"Stock '{stock_saved.name}' created successfully"})
+            user = serializer.check_user(clean_data)
+            if user is not None:
+                login(request, user)
+                return Response(serializer.data, status.HTTP_200_OK)
+            return Response({"error": "Invalid username and/or password"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LoginView(APIView):
-    def post(self, request):
-        try:
-            username = request.data["username"]
-            password = request.data["password"]
-        except KeyError:
-            return Response({"error": "username and password required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return Response({"success": f"User '{user.username}' logged in successfully"})
-        else:
-            return Response({"error": "Invalid username and/or password"}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-class LogoutView(APIView):
+class UserLogout(APIView):
     def post(self, request):
         logout(request)
-        return Response({"success": "User logged out successfully"})
+        return Response(status=status.HTTP_200_OK)
 
 
-class RegisterView(APIView):
-    def post(self, request):
-        try:
-            username = request.data["username"]
-            email = request.data["email"]
-            password = request.data["password"]
-            confirmation = request.data["confirmation"]
-        except KeyError:
-            return Response({"error": "username, email, password, and confirmation required"}, status=status.HTTP_400_BAD_REQUEST)
+class UserView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (SessionAuthentication,)
 
-        check = validate_register(username, email, password, confirmation)
-        if "error" in check:
-            return Response({"error": check["error"]}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return Response({"error": "Username already taken"}, status=status.HTTP_400_BAD_REQUEST)
-        login(request, user)
-        return Response({"success": f"User '{user.username}' created successfully"})
+    def get(self, request):
+        serializer = UserSerializer(data=request.user)
+        return Response({"user": serializer.data}, status=status.HTTP_200_OK)
