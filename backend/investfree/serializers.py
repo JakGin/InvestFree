@@ -1,13 +1,11 @@
 from rest_framework import serializers
-from django.contrib.auth import authenticate, get_user_model
-
-
-UserModel = get_user_model()
+from django.contrib.auth import authenticate
+from .models import User
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserModel
+        model = User
         fields = "__all__"
 
     def create(self, clean_data):
@@ -15,7 +13,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         email = clean_data["email"]
         password = clean_data["password"]
 
-        user = UserModel.objects.create_user(
+        user = User.objects.create_user(
             username=username, password=password, email=email
         )
         user.save()
@@ -37,5 +35,5 @@ class UserLoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model: UserModel
-        fields = "__all__"
+        model = User
+        fields = ("username", "email")

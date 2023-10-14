@@ -11,21 +11,20 @@ from .validations import validate_user_data
 
 
 class UserRegister(APIView):
-    permissions_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         clean_data = validate_user_data(request.data)
         serializer = UserRegisterSerializer(data=clean_data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.create(clean_data)
-            print(f"user {user}")
             if user:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLogin(APIView):
-    permissions_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)
 
     def post(self, request):
@@ -50,5 +49,5 @@ class UserView(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def get(self, request):
-        serializer = UserSerializer(data=request.user)
+        serializer = UserSerializer(request.user)
         return Response({"user": serializer.data}, status=status.HTTP_200_OK)
