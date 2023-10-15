@@ -10,7 +10,13 @@ function Logout() {
       await axios.post("/logout/");
       navigate("/login/")
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        console.error(error.response.status)
+      } else if (error.request) {
+        console.error("No response received. Server might be unreachable.")
+      } else {
+        console.error("An unexpected error occurred");
+      }
     }
   }
 

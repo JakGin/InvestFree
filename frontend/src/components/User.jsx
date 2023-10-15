@@ -21,8 +21,14 @@ const User = () => {
         })
         setLoggedIn(true)
       } catch (error) {
-        console.log(error);
-        navigate("/login");
+        if (error.response) {
+          console.error(error.response.status)
+          navigate("/login");
+        } else if (error.request) {
+          console.error("No response received. Server might be unreachable.")
+        } else {
+          console.error("An unexpected error occurred");
+        }
       }
     }
 
