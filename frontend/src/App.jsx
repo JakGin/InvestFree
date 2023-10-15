@@ -1,13 +1,13 @@
-import "./app.css";
+import "/src/app.css";
 import axios from "axios";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "/src/components/auth/Login";
-import Register from "/src/components/auth/Register";
-import User from "/src/components/User";
+import Login from "/src/pages/auth/Login";
+import Register from "/src/pages/auth/Register";
+import User from "/src/pages/User";
 import Layout from "/src/components/Layout";
-import Home from "/src/components/Home";
-import Dashboard from "/src/components/Dashboard";
-import NotFound from "/src/components/NotFound";
+import Home from "/src/pages/Home";
+import Dashboard from "/src/pages/Dashboard";
+import NotFound from "/src/pages/NotFound";
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";

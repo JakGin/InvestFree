@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import "/src/app.css";
-import Logout from "/src/components/auth/Logout";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import LogoutButton from "/src/pages/auth/LogoutButton";
 
 const User = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -33,7 +33,7 @@ const User = () => {
     }
 
     getUser();
-  }, []);
+  }, [navigate]);
 
   if (!loggedIn) {
     return <p>Checking credentials ...</p>;
@@ -41,7 +41,7 @@ const User = () => {
 
   return (
     <div className="User--container">
-      <Logout />
+      <LogoutButton />
       <h1>User Page Here</h1>
       <h2>{user?.username}</h2>
       <h2>{user?.email}</h2>

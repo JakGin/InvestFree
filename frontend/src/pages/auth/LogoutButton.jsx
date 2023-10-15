@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function Logout() {
+function LogoutButton() {
   const navigate = useNavigate()
 
   async function handleLogout(event) {
@@ -25,4 +25,4 @@ function Logout() {
   );
 }
 
-export default Logout;
+export default LogoutButton;

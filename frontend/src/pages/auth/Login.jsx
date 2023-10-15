@@ -17,9 +17,9 @@ function Login() {
       navigate("/user");
     } catch (error) {
       if (error.response) {
-        console.error(error.response.status)
+        console.error(error.response.status);
       } else if (error.request) {
-        console.error("No response received. Server might be unreachable.")
+        console.error("No response received. Server might be unreachable.");
       } else {
         console.error("An unexpected error occurred");
       }
@@ -35,6 +35,6 @@ function Login() {
       </form>
     </div>
   );
-};
+}
 
 export default Login;
