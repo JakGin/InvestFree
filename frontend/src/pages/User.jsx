@@ -14,18 +14,18 @@ const User = () => {
     async function getUser() {
       try {
         const response = await axios.get("/user/");
-        
+
         setUser({
           username: response.data.user.username,
           email: response.data.user.email,
-        })
-        setLoggedIn(true)
+        });
+        setLoggedIn(true);
       } catch (error) {
         if (error.response) {
-          console.error(error.response.status)
+          console.error(error.response.status);
           navigate("/login");
         } else if (error.request) {
-          console.error("No response received. Server might be unreachable.")
+          console.error("No response received. Server might be unreachable.");
         } else {
           console.error("An unexpected error occurred");
         }
