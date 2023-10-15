@@ -6,13 +6,19 @@ import Logout from "/src/components/auth/Logout";
 
 const User = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
 
   const navigate = useNavigate();
 
   useEffect(() => {
     async function getUser() {
       try {
-        await axios.get("/user/");
+        const response = await axios.get("/user/");
+        
+        setUser({
+          username: response.data.user.username,
+          email: response.data.user.email,
+        })
         setLoggedIn(true)
       } catch (error) {
         console.log(error);
@@ -31,6 +37,8 @@ const User = () => {
     <div className="User--container">
       <Logout />
       <h1>User Page Here</h1>
+      <h2>{user?.username}</h2>
+      <h2>{user?.email}</h2>
     </div>
   );
 };
