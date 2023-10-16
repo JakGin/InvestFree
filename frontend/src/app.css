@@ -66,6 +66,49 @@ main {
   color: #39ac31;
 }
 
+.Header--rightPanel {
+  border: 2px solid #eee;
+  border-radius: 5px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 8px;
+  cursor: pointer;
+  /* position: relative; */
+}
+
+.Header--nav {
+  position: absolute;
+  top: 70px;
+  right: 10px;
+  flex-direction: column;
+  background-color: #181818;
+  border: 2px solid #111;
+  padding: 0.3em 1em;
+  border-radius: 5px;
+  align-items: center;
+  width: 150px;
+}
+
+.Header--nav > *:not(:last-child) {
+  border-bottom: 1px dashed white;
+}
+
+.Header--nav a {
+  text-decoration: none;
+  color: inherit;
+  padding: 0.5em 0;
+  width: 100%;
+  text-align: center;
+}
+
+.Header--nav a:hover {
+  text-decoration: none;
+  color: #39ac31;
+}
+
 .Footer--container {
   width: 100%;
   background-color: #181818;
