@@ -109,6 +109,18 @@ main {
   color: #39ac31;
 }
 
+.Header--nav a.active {
+  color: #39ac31;
+}
+
+.Header--logoutNav {
+  color: rgb(255, 106, 106);
+}
+
+.Header--logoutNav:hover {
+  color: rgb(241, 35, 35);
+}
+
 .Footer--container {
   width: 100%;
   background-color: #181818;

@@ -47,8 +47,8 @@ function Header() {
           <NavLink to="/dashboard">Dashboard</NavLink>
           <NavLink to="/register">Register</NavLink>
           <NavLink to="/login">Login</NavLink>
-          <NavLink to="/logout" style={{ color: "red" }}>
-            Logout
+          <NavLink to="/logout" >
+            <span className="Header--logoutNav">Logout</span>
           </NavLink>
         </nav>
       </div>
