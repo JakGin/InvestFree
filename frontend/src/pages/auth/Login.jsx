@@ -1,10 +1,12 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import ErrorMessage from "/src/utils/ErrorMessage";
+import { AuthContext } from "/src/App";
 
 function Login() {
   const [error, setError] = useState(false);
+  const setIsAuthenticated = useContext(AuthContext)[1];
 
   const navigate = useNavigate();
 
@@ -17,11 +19,12 @@ function Login() {
 
     try {
       await axios.post("/login/", user);
+      setIsAuthenticated(true);
       navigate("/user");
     } catch (error) {
       if (error.response) {
         console.error(error.response.status);
-        setError(true)
+        setError(true);
       } else if (error.request) {
         console.error("No response received. Server might be unreachable.");
       } else {
@@ -38,7 +41,7 @@ function Login() {
         <input type="submit" value="Login" />
         {error && <ErrorMessage text="Invalid Username and/or Password!" />}
       </form>
-        <Link to="/register">Don&apos;t have account. Register Here</Link>
+      <Link to="/register">Don&apos;t have account. Register Here</Link>
     </div>
   );
 }

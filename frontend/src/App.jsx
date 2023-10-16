@@ -1,5 +1,6 @@
 import "/src/app.css";
 import axios from "axios";
+import { useState, createContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "/src/pages/auth/Login";
 import Register from "/src/pages/auth/Register";
@@ -14,23 +15,29 @@ axios.defaults.xsrfHeaderName = "X-CSRFToken";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
-function App() {
-  return (
-    <div className="App--container">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="user" element={<User />} />
-            <Route path="register" element={<Register />} />
-            <Route path="login" element={<Login />} />
-            <Route path="dashboard" element={<Dashboard />} />
-          </Route>
+export const AuthContext = createContext(null);
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  return (
+    <AuthContext.Provider value={[isAuthenticated, setIsAuthenticated]}>
+      <div className="App--container">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="user" element={<User />} />
+              <Route path="register" element={<Register />} />
+              <Route path="login" element={<Login />} />
+              <Route path="dashboard" element={<Dashboard />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </AuthContext.Provider>
   );
 }
 

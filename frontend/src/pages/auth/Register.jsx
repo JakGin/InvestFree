@@ -1,13 +1,15 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import ErrorMessage from "/src/utils/ErrorMessage";
+import { AuthContext } from "/src/App";
 
 function Register() {
   const [error, setError] = useState({
     status: false,
     message: "",
   });
+  const setIsAuthenticated = useContext(AuthContext)[1];
 
   const navigate = useNavigate();
 
@@ -25,6 +27,7 @@ function Register() {
         username: event.target[0].value,
         password: event.target[2].value,
       });
+      setIsAuthenticated(true);
       navigate("/user");
     } catch (error) {
       if (error.response) {

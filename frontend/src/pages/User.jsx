@@ -2,7 +2,6 @@ import axios from "axios";
 import "/src/app.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LogoutButton from "/src/pages/auth/LogoutButton";
 
 const User = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -41,7 +40,6 @@ const User = () => {
 
   return (
     <div className="User--container">
-      <LogoutButton />
       <h1>User Page Here</h1>
       <h2>{user?.username}</h2>
       <h2>{user?.email}</h2>

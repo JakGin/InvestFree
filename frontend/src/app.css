@@ -113,11 +113,13 @@ main {
   color: #39ac31;
 }
 
-.Header--logoutNav {
+.LogoutButton {
   color: rgb(255, 106, 106);
+  cursor: pointer;
+  padding: 0.5em 0;
 }
 
-.Header--logoutNav:hover {
+.LogoutButton:hover {
   color: rgb(241, 35, 35);
 }
 

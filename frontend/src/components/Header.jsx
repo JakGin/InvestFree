@@ -1,8 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "/src/App";
+import LogoutButton from "/src/pages/auth/LogoutButton";
 
 function Header() {
   const [clickListener, setClickListener] = useState(null);
+
+  const isAuthenticated = useContext(AuthContext)[0];
 
   function showHideNav() {
     const nav = document.querySelector(".Header--nav");
@@ -44,12 +48,10 @@ function Header() {
         </div>
         <nav className="Header--nav" style={{ display: "none" }}>
           <NavLink to="/">Home</NavLink>
-          <NavLink to="/dashboard">Dashboard</NavLink>
+          {isAuthenticated && <NavLink to="/dashboard">Dashboard</NavLink>}
           <NavLink to="/register">Register</NavLink>
           <NavLink to="/login">Login</NavLink>
-          <NavLink to="/logout" >
-            <span className="Header--logoutNav">Logout</span>
-          </NavLink>
+          {isAuthenticated && <LogoutButton />}
         </nav>
       </div>
     </div>
