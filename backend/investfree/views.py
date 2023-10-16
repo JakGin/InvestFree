@@ -9,7 +9,6 @@ from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerial
 from .models import User, Stock, Transaction
 from .validations import validate_register_data
 
-
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -21,11 +20,11 @@ class UserRegister(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer = UserRegisterSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.create(data)
+        if serializer.is_valid(raise_exception=False):
+            user = serializer.create(data) 
             if user:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "User with that username already exist"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLogin(APIView):
