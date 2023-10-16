@@ -6,6 +6,10 @@
   padding: 0;
 }
 
+img {
+  display: block;
+}
+
 body {
   font-family: "Roboto", sans-serif;
 }
@@ -14,6 +18,44 @@ body {
   background-color: #222;
   color: #eee;
   min-height: 100vh;
+  position: relative;
+}
+
+.Layout--container {
+}
+
+.Header--container {
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  align-items: center;
+  background-color: #181818;
+  padding: 0 1em;
+}
+
+.Header--leftPanel {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.Header--container img {
+  max-height: 50px;
+}
+
+.Header--container h1 {
+  color: #39ac31;
+}
+
+.Footer--container {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  background-color: #181818;
+  color: #aaa;
+  font-weight: 300;
+  padding: 1em 1em;
 }
 
 .Home--container {
