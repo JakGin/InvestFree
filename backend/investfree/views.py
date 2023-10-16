@@ -7,17 +7,22 @@ from rest_framework import permissions, status
 
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
 from .models import User, Stock, Transaction
-from .validations import validate_user_data
+from .validations import validate_register_data
 
 
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        clean_data = validate_user_data(request.data)
-        serializer = UserRegisterSerializer(data=clean_data)
+        data = request.data
+        try:
+            validate_register_data(data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = UserRegisterSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            user = serializer.create(clean_data)
+            user = serializer.create(data)
             if user:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -28,10 +33,10 @@ class UserLogin(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def post(self, request):
-        clean_data = validate_user_data(request.data)
-        serializer = UserLoginSerializer(data=clean_data)
+        data = request.data
+        serializer = UserLoginSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            user = serializer.check_user(clean_data)
+            user = serializer.check_user(data)
             if user is not None:
                 login(request, user)
                 return Response(serializer.data, status.HTTP_200_OK)
