@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import ErrorMessage from "/src/utils/ErrorMessage";
 
 function Register() {
@@ -50,6 +50,7 @@ function Register() {
         <input type="submit" value="Register" />
         {error.status && <ErrorMessage text={error.message} />}
       </form>
+      <Link to="/login">Already have account. Login Here</Link>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import ErrorMessage from "/src/utils/ErrorMessage";
 
 function Login() {
@@ -38,6 +38,7 @@ function Login() {
         <input type="submit" value="Login" />
         {error && <ErrorMessage text="Invalid Username and/or Password!" />}
       </form>
+        <Link to="/register">Don&apos;t have account. Register Here</Link>
     </div>
   );
 }
