@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import ErrorMessage from "/src/utils/ErrorMessage";
 
 function Register() {
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({
+    status: false,
+    message: "",
+  });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -21,14 +24,17 @@ function Register() {
       await axios.post("/login/", {
         username: event.target[0].value,
         password: event.target[2].value,
-      })
+      });
       navigate("/user");
     } catch (error) {
       if (error.response) {
-        console.error(error.response.status)
-        setError(true)
+        console.error(error.response.status);      
+        setError({
+          status: true,
+          message: error.response.data.error,
+        });
       } else if (error.request) {
-        console.error("No response received. Server might be unreachable.")
+        console.error("No response received. Server might be unreachable.");
       } else {
         console.error("An unexpected error occurred");
       }
@@ -42,10 +48,10 @@ function Register() {
         <input type="email" placeholder="Email" required />
         <input type="password" placeholder="Password" required />
         <input type="submit" value="Register" />
-        {error && <ErrorMessage text="Invalid Username and/or Password!" />}
+        {error.status && <ErrorMessage text={error.message} />}
       </form>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;
