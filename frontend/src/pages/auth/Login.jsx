@@ -1,8 +1,11 @@
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import ErrorMessage from "/src/utils/ErrorMessage";
 
 function Login() {
+  const [error, setError] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -18,6 +21,7 @@ function Login() {
     } catch (error) {
       if (error.response) {
         console.error(error.response.status);
+        setError(true)
       } else if (error.request) {
         console.error("No response received. Server might be unreachable.");
       } else {
@@ -27,11 +31,12 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="Login--container">
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Username" required />
         <input type="password" placeholder="Password" required />
         <input type="submit" value="Login" />
+        {error && <ErrorMessage text="Invalid Username and/or Password!" />}
       </form>
     </div>
   );

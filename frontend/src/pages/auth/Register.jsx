@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ErrorMessage from "/src/utils/ErrorMessage";
 
 function Register() {
+  const [error, setError] = useState(false);
+
   const navigate = useNavigate()
 
   const handleSubmit = async (event) => {
@@ -23,6 +26,7 @@ function Register() {
     } catch (error) {
       if (error.response) {
         console.error(error.response.status)
+        setError(true)
       } else if (error.request) {
         console.error("No response received. Server might be unreachable.")
       } else {
@@ -32,12 +36,13 @@ function Register() {
   };
 
   return (
-    <div>
+    <div className="Register--container">
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Username" required />
         <input type="email" placeholder="Email" required />
         <input type="password" placeholder="Password" required />
         <input type="submit" value="Register" />
+        {error && <ErrorMessage text="Invalid Username and/or Password!" />}
       </form>
     </div>
   )
