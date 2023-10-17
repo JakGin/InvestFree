@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap");
 
+/* CSS RESET */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,6 +16,8 @@ input {
   font-size: inherit;
   font-weight: inherit;
 }
+
+/* UTILITIES */
 
 body {
   font-family: "Roboto", sans-serif;
@@ -184,7 +187,7 @@ main {
   padding: 1em 2em;
   gap: 2em;
   width: 100%;
-  max-width:500px;
+  max-width: 500px;
 }
 
 .Login--container form,
@@ -236,4 +239,77 @@ main {
   font-size: 1.1rem;
   text-align: center;
   padding: 1em;
+}
+
+.Home--container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.2em 1em;
+  max-width: 1000px;
+}
+
+.Home--container h1,
+.Home--container h2 {
+  font-size: 3rem;
+  text-align: center;
+  background: rgb(57, 172, 49);
+  background: linear-gradient(
+    45deg,
+    rgba(57, 172, 49, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: rgba(0, 0, 0, 0.2);
+}
+
+.Home--container img {
+  object-fit: cover;
+  width: 100%;
+  max-width: 400px;
+}
+
+.Home--quote {
+  background-image: url("/src/img/stock.jpg");
+  filter: grayscale(100%);
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 1em;
+  font-size: 1.5rem;
+  border-radius: 5px;
+  min-height: 200px;
+}
+
+.ButtonLink {
+  background-color: #39ac31;
+  padding: 1.2em 2em;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.ButtonLink-sm {
+  font-size: 1rem;
+  padding: 1em 1.5em;
+}
+
+.ButtonLink-md {
+  font-size: 1.3rem;
+  padding: 1.1em 1.8em;
+}
+
+.ButtonLink-bg {
+  font-size: 1.6rem;
+  padding: 1.3em 2em;
+}
+
+.ButtonLink a {
+  text-decoration: none;
+  color: #eee;
+  font-size: inherit;
+}
+
+.ButtonLink:active {
+  transform: translateY(-2px);
 }
