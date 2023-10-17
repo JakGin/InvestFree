@@ -53,6 +53,8 @@ main {
   align-items: center;
   background-color: #181818;
   padding: 0 1em;
+  position: fixed;
+  top: 0;
 }
 
 .Header--leftPanel {

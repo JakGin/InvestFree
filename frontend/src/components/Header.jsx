@@ -35,6 +35,7 @@ function Header() {
   }
 
   return (
+    <>
     <div className="Header--container">
       <div className="Header--leftPanel">
         <img src="/src/img/logo.png" alt="logo" />
@@ -55,6 +56,9 @@ function Header() {
         </nav>
       </div>
     </div>
+    {/* div that replace normal flow of sticky header with position: fixed */}
+    <div style={{height: "60px"}}></div>
+    </>
   );
 }
 
