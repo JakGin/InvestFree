@@ -42,7 +42,7 @@ function Header() {
         <h1>InvestFree</h1>
       </div>
       <div>
-        <div className="Header--rightPanel" onClick={showHideNav}>
+        <div className="Header--rightPanel" onMouseDown={showHideNav}>
           <hr />
           <hr />
           <hr />
