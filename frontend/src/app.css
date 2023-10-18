@@ -18,6 +18,9 @@ input {
 }
 
 /* UTILITIES */
+.purple {
+  color: #933199;
+}
 
 body {
   font-family: "Roboto", sans-serif;
@@ -216,7 +219,7 @@ main {
 
 .Login--container form input[type="submit"],
 .Register--container form input[type="submit"] {
-  background-color: #39ac31;
+  background-color: rgb(57, 172, 49);
   border: 1px solid #187911;
   cursor: pointer;
   color: white;
@@ -270,8 +273,9 @@ main {
   background: rgb(57, 172, 49);
   background: linear-gradient(
     45deg,
+    /* rgb(165, 218, 161) 0%, */
     rgba(57, 172, 49, 1) 0%,
-    rgba(255, 255, 255, 1) 100%
+    rgb(210, 235, 189) 100%
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -284,15 +288,37 @@ main {
   max-width: 400px;
 }
 
-.Home--quote {
-  background-image: url("/src/img/stock.jpg");
-  filter: grayscale(100%);
-  background-size: cover;
-  background-repeat: no-repeat;
+.Home--quotes {
+  background-color: #222222de;
   padding: 1em;
   font-size: 1.5rem;
-  border-radius: 5px;
   min-height: 200px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 4em;
+}
+
+.Home--quote {
+  position: relative;
+  padding-bottom: 2em;
+}
+
+.Home--quotes-outer {
+  background-image: url("/src/img/stock.jpg");
+  filter: grayscale(50%);
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 5px;
+
+}
+
+.Home--quote-author {
+  position: absolute;
+  bottom: 0;
+  right: 1em;
+  color:#21e213;
+  text-shadow: 1px 1px 1px black;
 }
 
 .ButtonLink {
