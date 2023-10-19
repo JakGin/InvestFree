@@ -353,3 +353,34 @@ main {
 .ButtonLink:active {
   transform: translateY(-2px);
 }
+
+.Dashboard--container {
+
+}
+
+.Dashboard--section {
+  display: flex;
+  overflow-x:scroll;
+  padding: 1em;
+  background-color: #AAAAAA;
+  gap: 1em;
+  
+}
+
+.Stock--container {
+  border-radius: 5px;
+  width: 120px;
+  height: 200px;
+  background-color: #EEEEEE;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5em;
+}
+
+.Stock--container img {
+  width: 70%;
+  height: 30%;
+}
