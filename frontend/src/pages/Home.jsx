@@ -9,10 +9,6 @@ function Home() {
       <img src="/src/img/bitcoin.png" alt="bitcoin" />
       <h2>
         It&rsquo;s simple, effortless, fun and free!
-        {/* It&rsquo;s <span className="purple">simple</span>,{" "}
-        <span className="purple">effortless</span>,{" "}
-        <span className="purple">fun</span> and{" "}
-        <span className="purple">free!</span> */}
       </h2>
       <img src="/src/img/dollars.png" alt="dollars" />
       <br />
