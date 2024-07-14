@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useState, useContext } from "react";
 import { AuthContext } from "/src/App";
 import LogoutButton from "/src/pages/auth/LogoutButton";
@@ -37,10 +37,10 @@ function Header() {
   return (
     <>
     <div className="Header--container">
-      <div className="Header--leftPanel">
+      <Link className="Header--leftPanel" to="/">
         <img src="/src/img/logo.png" alt="logo" />
         <h1 className="font-medium tracking-wide text-lg">InvestFree</h1>
-      </div>
+      </Link>
       <div>
         <div className="Header--rightPanel" onMouseDown={showHideNav}>
           <hr />
