@@ -1,6 +1,5 @@
 import React from "react"
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi"
-import { Button } from "./ui/button"
 
 function Stock() {
   return (
@@ -11,7 +10,6 @@ function Stock() {
       <div>
         <BiSolidDownArrow />
         2.34%
-        <Button>Buy</Button>
       </div>
     </div>
   )
