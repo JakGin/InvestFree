@@ -3,11 +3,13 @@ import ButtonLink from "../components/ButtonLink"
 function Home() {
   return (
     <div className="Home--container">
-      <h1>
-        Invest in market stocks for free in a real world mirroring simulation
+      <h1 className="font-bold">
+        Invest in market stocks for free in a real world simulation
       </h1>
       <img src="/src/img/bitcoin.png" alt="bitcoin" />
-      <h2>It&rsquo;s simple, effortless, fun and free!</h2>
+      <h2 className="font-bold">
+        It&rsquo;s simple, effortless, fun and free!
+      </h2>
       <img src="/src/img/dollars.png" alt="dollars" />
       <br />
       <div className="Home--quotes-outer">

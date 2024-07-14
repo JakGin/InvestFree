@@ -39,7 +39,7 @@ function Header() {
     <div className="Header--container">
       <div className="Header--leftPanel">
         <img src="/src/img/logo.png" alt="logo" />
-        <h1>InvestFree</h1>
+        <h1 className="font-medium tracking-wide text-lg">InvestFree</h1>
       </div>
       <div>
         <div className="Header--rightPanel" onMouseDown={showHideNav}>
