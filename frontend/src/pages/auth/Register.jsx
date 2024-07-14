@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useState, useEffect, useContext } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import ErrorMessage from "/src/utils/ErrorMessage"
