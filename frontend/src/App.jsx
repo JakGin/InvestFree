@@ -1,24 +1,18 @@
-import "/src/app.css";
-import axios from "axios";
-import { useState, createContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "/src/pages/auth/Login";
-import Register from "/src/pages/auth/Register";
-import User from "/src/pages/User";
-import Layout from "/src/components/Layout";
-import Home from "/src/pages/Home";
-import Dashboard from "/src/pages/Dashboard";
-import NotFound from "/src/pages/NotFound";
+import "/src/app.css"
+import { useState, createContext } from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import Login from "/src/pages/auth/Login"
+import Register from "/src/pages/auth/Register"
+import User from "/src/pages/User"
+import Layout from "/src/components/Layout"
+import Home from "/src/pages/Home"
+import Dashboard from "/src/pages/Dashboard"
+import NotFound from "/src/pages/NotFound"
 
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.xsrfHeaderName = "X-CSRFToken";
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
-
-export const AuthContext = createContext(null);
+export const AuthContext = createContext(null)
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   return (
     <AuthContext.Provider value={[isAuthenticated, setIsAuthenticated]}>
@@ -38,7 +32,7 @@ function App() {
         </BrowserRouter>
       </div>
     </AuthContext.Provider>
-  );
+  )
 }
 
-export default App;
+export default App

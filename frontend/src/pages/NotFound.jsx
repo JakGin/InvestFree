@@ -1,4 +1,4 @@
-import "/src/app.css";
+import "/src/app.css"
 
 function NotFound() {
   return (
@@ -9,7 +9,7 @@ function NotFound() {
       <p>the page you are looking for not available!</p>
       <a href={`${import.meta.env.VITE_FRONTEND_URL}/`}>Go to Home</a>
     </div>
-  );
+  )
 }
 
-export default NotFound;
+export default NotFound

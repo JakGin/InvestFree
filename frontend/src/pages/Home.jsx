@@ -1,4 +1,4 @@
-import ButtonLink from "../components/ButtonLink";
+import ButtonLink from "../components/ButtonLink"
 
 function Home() {
   return (
@@ -7,9 +7,7 @@ function Home() {
         Invest in market stocks for free in a real world mirroring simulation
       </h1>
       <img src="/src/img/bitcoin.png" alt="bitcoin" />
-      <h2>
-        It&rsquo;s simple, effortless, fun and free!
-      </h2>
+      <h2>It&rsquo;s simple, effortless, fun and free!</h2>
       <img src="/src/img/dollars.png" alt="dollars" />
       <br />
       <div className="Home--quotes-outer">
@@ -22,7 +20,7 @@ function Home() {
             </p>
             <div className="Home--quote-author">Robert Kiyosaki</div>
           </div>
-          
+
           <div className="Home--quote">
             <p>
               &ldquo;Compound interest is the eighth wonder of the world; he who
@@ -40,7 +38,7 @@ function Home() {
       <br />
       <ButtonLink to="/register" text="Start Investing" size="bg" />
     </div>
-  );
+  )
 }
 
-export default Home;
+export default Home

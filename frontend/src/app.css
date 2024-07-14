@@ -273,8 +273,7 @@ main {
   background: rgb(57, 172, 49);
   background: linear-gradient(
     45deg,
-    /* rgb(165, 218, 161) 0%, */
-    rgba(57, 172, 49, 1) 0%,
+    /* rgb(165, 218, 161) 0%, */ rgba(57, 172, 49, 1) 0%,
     rgb(210, 235, 189) 100%
   );
   background-clip: text;
@@ -310,20 +309,19 @@ main {
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 5px;
-
 }
 
 .Home--quote-author {
   position: absolute;
   bottom: 0;
   right: 1em;
-  color:#21e213;
+  color: #21e213;
   text-shadow: 1px 1px 1px black;
 }
 
 .ButtonLink {
   background-color: #39ac31;
-  padding: 1.2em 2em;
+  padding: 1em 2em;
   border-radius: 5px;
   border: none;
   cursor: pointer;
@@ -331,17 +329,17 @@ main {
 
 .ButtonLink-sm {
   font-size: 1rem;
-  padding: 1em 1.5em;
+  padding: 0.8em 1.5em;
 }
 
 .ButtonLink-md {
   font-size: 1.3rem;
-  padding: 1.1em 1.8em;
+  padding: 0.9em 1.8em;
 }
 
 .ButtonLink-bg {
   font-size: 1.6rem;
-  padding: 1.3em 2em;
+  padding: 1em 2em;
 }
 
 .ButtonLink a {
@@ -355,23 +353,21 @@ main {
 }
 
 .Dashboard--container {
-
 }
 
 .Dashboard--section {
   display: flex;
-  overflow-x:scroll;
+  overflow-x: scroll;
   padding: 1em;
-  background-color: #AAAAAA;
+  background-color: #aaaaaa;
   gap: 1em;
-  
 }
 
 .Stock--container {
   border-radius: 5px;
   width: 120px;
   height: 200px;
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
   color: #111;
   display: flex;
   flex-direction: column;
