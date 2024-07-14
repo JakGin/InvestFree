@@ -2,7 +2,7 @@ import { useState, useContext } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import ErrorMessage from "/src/utils/ErrorMessage"
 import { AuthContext } from "/src/App"
-import { getCSRFToken } from "/src/utils/cookies"
+import { getCSRFToken } from "@/utils/tokens"
 
 function Login() {
   const [error, setError] = useState(false)

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "/src/App";
 import { useContext } from "react";
-import { getCSRFToken } from "/src/utils/cookies"
+import { getCSRFToken } from "@/utils/tokens";
 
 function LogoutButton() {
   const navigate = useNavigate();

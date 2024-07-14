@@ -5,7 +5,7 @@ import { AuthContext } from "/src/App"
 import * as EmailValidator from "email-validator"
 import { nanoid } from "nanoid"
 import { BiSolidCheckSquare, BiErrorAlt } from "react-icons/bi"
-import { getCSRFToken } from "/src/utils/cookies"
+import { getCSRFToken } from "@/utils/tokens"
 
 function Register() {
   const [error, setError] = useState({
