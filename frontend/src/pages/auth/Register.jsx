@@ -1,11 +1,18 @@
 import { useState, useEffect, useContext } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import ErrorMessage from "/src/utils/ErrorMessage"
 import { AuthContext } from "/src/App"
 import * as EmailValidator from "email-validator"
 import { nanoid } from "nanoid"
 import { BiSolidCheckSquare, BiErrorAlt } from "react-icons/bi"
 import { getCSRFToken } from "@/utils/tokens"
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+  Input,
+  Button,
+} from "@chakra-ui/react"
 
 function Register() {
   const [error, setError] = useState({
@@ -95,6 +102,8 @@ function Register() {
       password: event.target[2].value,
     }
 
+    console.log(user)
+
     try {
       await fetch(`${import.meta.env.VITE_BACKEND_URL}/register/`, {
         method: "POST",
@@ -159,20 +168,40 @@ function Register() {
 
   return (
     <div className="Register--container">
-      <form onSubmit={handleSubmit} onChange={handleFormChange}>
-        <input type="text" name="username" placeholder="Username" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
-        <input type="submit" value="Register" />
-        {error.status && <ErrorMessage text={error.message} />}
+      <form
+        onSubmit={handleSubmit}
+        onChange={handleFormChange}
+        className="flex flex-col gap-4"
+      >
+        <FormControl isRequired>
+          <FormLabel>Username</FormLabel>
+          <Input name="username" />
+          <FormHelperText>
+            Username will be displayed on your Dashboard.
+          </FormHelperText>
+          <FormErrorMessage>Username is required.</FormErrorMessage>
+        </FormControl>
+        <FormControl isRequired>
+          <FormLabel>Email address</FormLabel>
+          <Input type="email" name="email" />
+          <FormHelperText>We'll never share your email.</FormHelperText>
+          <FormErrorMessage>Valid email is required.</FormErrorMessage>
+        </FormControl>
+        <FormControl isRequired>
+          <FormLabel>Password</FormLabel>
+          <Input type="password" name="password" />
+          <FormErrorMessage>
+            There is something wrong with this password.
+          </FormErrorMessage>
+        </FormControl>
+
+        <Button type="submit" className="mt-6">
+          Register
+        </Button>
       </form>
-      <Link to="/login">Already have account. Login Here</Link>
+
       {constraintsElement}
+      <Link to="/login">Already have account. Login Here</Link>
     </div>
   )
 }

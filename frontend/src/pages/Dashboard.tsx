@@ -5,7 +5,7 @@ import WalletBriefInfo from "@/components/WalletBriefInfo"
 
 export default function Dashboard() {
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       <WalletBriefInfo />
       <BuyStock />
       {/* <PopularStocks /> */}

@@ -121,7 +121,7 @@ body {
   max-width: 500px;
 }
 
-.Login--container form,
+/* .Login--container form,
 .Register--container form {
   display: flex;
   flex-direction: column;
@@ -155,7 +155,7 @@ body {
 .Login--container form input[type="submit"]:active,
 .Register--container form input[type="submit"]:active {
   transform: translateY(-2px);
-}
+} */
 
 .Login--container a,
 .Register--container a {
