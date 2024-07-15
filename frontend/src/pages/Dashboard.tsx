@@ -14,6 +14,7 @@ import Autocomplete from "@mui/material/Autocomplete"
 // }
 
 function Dashboard() {
+  const [stock, setStock] = useState("")
   // useEffect(() => {
   //   fetchData()
   // }, [])
@@ -34,26 +35,8 @@ function Dashboard() {
     "Stock 3",
     "Stock 4",
     "Stock 5",
-    "Stock 1",
-    "Stock 2",
-    "Stock 3",
-    "Stock 4",
-    "Stock 5",
-    "Stock 1",
-    "Stock 2",
-    "Stock 3",
-    "Stock 4",
-    "Stock 5",
-    "Stock 1",
-    "Stock 2",
-    "Stock 3",
-    "Stock 4",
-    "Stock 5",
-    "Stock 1",
-    "Stock 2",
-    "Stock 3",
-    "Stock 4",
-    "Stock 5",
+    "Stock 6",
+    "Stock 7",
   ]
 
   return (
@@ -64,7 +47,9 @@ function Dashboard() {
         id="combo-box-demo"
         options={stocks}
         sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Movie" />}
+        renderInput={(params) => <TextField {...params} label="Stock" />}
+        value={stock}
+        onChange={(event, newValue)=>setStock(newValue as string)}
       />
       <div className="Dashboard--container">
         <div className="Dashboard--section">

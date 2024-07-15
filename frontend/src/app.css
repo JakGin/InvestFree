@@ -35,8 +35,8 @@ main {
 }
 
 .App--container {
-  background-color: #222;
-  color: #eee;
+  /* background-color: #222;
+  color: #eee; */
   min-height: 100vh;
 }
 

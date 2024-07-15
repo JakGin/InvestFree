@@ -8,6 +8,7 @@ import Layout from "/src/components/Layout"
 import Home from "/src/pages/Home"
 import Dashboard from "/src/pages/Dashboard"
 import NotFound from "/src/pages/NotFound"
+import Wallet from "./pages/Wallet"
 
 export const AuthContext = createContext(null)
 
