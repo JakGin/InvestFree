@@ -26,11 +26,6 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-main {
-  width: 100%;
-  flex: 1;
-}
-
 .Layout--container {
   display: flex;
   flex-direction: column;
@@ -120,7 +115,9 @@ main {
   flex-direction: column;
   padding: 1em 2em;
   gap: 2em;
-  /* width: 100%; */
+  margin-bottom: auto;
+  margin-top: auto;
+  min-width: 400px;
   max-width: 500px;
 }
 

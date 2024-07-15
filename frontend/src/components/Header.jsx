@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { useState, useContext } from "react"
 import { AuthContext } from "/src/App"
 import Menu from "./Menu"
+import { ThemeSwitcher } from "./ThemeSwitcher"
 
 function Header() {
   return (
@@ -10,6 +11,8 @@ function Header() {
         <img src="/src/img/logo.png" alt="logo" />
         <h1 className="font-medium tracking-wide text-lg">InvestFree</h1>
       </Link>
+
+      <ThemeSwitcher />
 
       <Menu />
     </div>

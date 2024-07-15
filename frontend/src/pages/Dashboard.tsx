@@ -8,7 +8,7 @@ export default function Dashboard() {
     <div>
       <WalletBriefInfo />
       <BuyStock />
-      <PopularStocks />
+      {/* <PopularStocks /> */}
     </div>
   )
 }

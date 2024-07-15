@@ -6,7 +6,7 @@ function Layout() {
   return (
     <div className="Layout--container">
       <Header />
-      <main>
+      <main className="flex flex-col flex-1 w-screen items-center">
         <Outlet />
       </main>
       <Footer />
