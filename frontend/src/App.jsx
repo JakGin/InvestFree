@@ -17,21 +17,22 @@ function App() {
 
   return (
     <AuthContext.Provider value={[isAuthenticated, setIsAuthenticated]}>
-      <div className="App--container">
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path="user" element={<User />} />
-              <Route path="register" element={<Register />} />
-              <Route path="login" element={<Login />} />
-              <Route path="dashboard" element={<Dashboard />} />
-            </Route>
+          <div className="App--container">
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="user" element={<User />} />
+                <Route path="register" element={<Register />} />
+                <Route path="login" element={<Login />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="wallet" element={<Wallet />} />
+              </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </BrowserRouter>
-      </div>
     </AuthContext.Provider>
   )
 }

@@ -1,4 +1,3 @@
-import { Autocomplete, Button, TextField } from "@mui/material"
 import React, { useState } from "react"
 
 const BuyStock = () => {
@@ -25,7 +24,7 @@ const BuyStock = () => {
   return (
     <div>
       <h1>Search for a Stock</h1>
-      <form>
+      {/* <form>
         <Autocomplete
           disablePortal
           id="combo-box-demo"
@@ -51,7 +50,7 @@ const BuyStock = () => {
         />
         <h2>Total price <span>{Number(nUnits) * 34}</span>$</h2>
         <Button variant="contained">Buy</Button>
-      </form>
+      </form> */}
     </div>
   )
 }
