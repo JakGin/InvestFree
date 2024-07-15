@@ -17,7 +17,7 @@ import { Link } from "react-router-dom"
 import { AuthContext } from "@/App"
 
 const Menu = () => {
-    const isAuthenticated = useContext(AuthContext)?.[0]
+  const isAuthenticated = useContext(AuthContext)?.[0]
 
   return (
     <ChakraMenu>
@@ -39,11 +39,11 @@ const Menu = () => {
           <MenuItem icon={<LogIn />}>Login / Register</MenuItem>
         </Link>
         <Link to="/logout">
-          <MenuItem icon={<LogOut />}>Logout</MenuItem>
+          <MenuItem icon={<LogOut />} color="red">Logout</MenuItem>
         </Link>
-        {/* <Link to="/rankings">
-              <MenuItem icon={<PersonStanding />}>Top Players</MenuItem>
-            </Link> */}
+        <Link to="/rankings">
+          <MenuItem icon={<PersonStanding />}>Top Players</MenuItem>
+        </Link>
       </MenuList>
     </ChakraMenu>
   )

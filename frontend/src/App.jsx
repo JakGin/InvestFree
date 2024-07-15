@@ -9,6 +9,7 @@ import Home from "/src/pages/Home"
 import Dashboard from "/src/pages/Dashboard"
 import NotFound from "/src/pages/NotFound"
 import Wallet from "./pages/Wallet"
+import Rankings from "./pages/Rankings"
 
 export const AuthContext = createContext(null)
 
@@ -18,7 +19,6 @@ function App() {
   return (
     <AuthContext.Provider value={[isAuthenticated, setIsAuthenticated]}>
         <BrowserRouter>
-          <div className="App--container">
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
@@ -27,11 +27,11 @@ function App() {
                 <Route path="login" element={<Login />} />
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="wallet" element={<Wallet />} />
+                <Route path="rankings" element={<Rankings />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
         </BrowserRouter>
     </AuthContext.Provider>
   )
