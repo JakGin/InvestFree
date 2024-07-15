@@ -35,8 +35,8 @@ main {
 }
 
 .App--container {
-  /* background-color: #222;
-  color: #eee; */
+  background-color: #777;
+  color: #eee;
   min-height: 100vh;
 }
 
@@ -355,6 +355,7 @@ main {
 .Dashboard--section {
   display: flex;
   overflow-x: scroll;
+  max-width: 600px;
   padding: 1em;
   background-color: #aaaaaa;
   gap: 1em;
@@ -362,7 +363,7 @@ main {
 
 .Stock--container {
   border-radius: 5px;
-  width: 120px;
+  width: 240px;
   height: 200px;
   background-color: #eeeeee;
   color: #111;
