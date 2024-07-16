@@ -1,27 +1,19 @@
 import { User } from "@/types"
-import { getCSRFToken } from "@/utils/tokens"
 import useSWR from "swr"
 
-export function useUser() {
-  const fetcher = async (): Promise<User> => {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user`, {
-      headers: {
-        "X-CSRFToken": getCSRFToken() || "",
-      },
-      credentials: "include",
-    })
+const fetcher = async (url: string): Promise<User> => {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${url}/`, {
+    credentials: "include",
+  })
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch")
-    }
-
-    return response.json()
+  if (!response.ok) {
+    throw new Error("Failed to fetch")
   }
+  return response.json()
+}
 
-  const { data, error, isLoading } = useSWR(
-    `${import.meta.env.VITE_BACKEND_URL}/wallet`,
-    fetcher
-  )
+export function useUser() {
+  const { data, error, isLoading } = useSWR("/user", fetcher)
 
   return {
     userData: data,

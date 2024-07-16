@@ -1,8 +1,3 @@
-export type BasicWallet = {
-  account?: number
-  wallet?: number
-}
-
 export type Wallet = {
   account: number
   wallet: number
@@ -17,6 +12,9 @@ export type Wallet = {
 }
 
 export type User = {
-  username: string
-  email: string
+  user: {
+    username: string
+    email: string
+  }
+  wallet: Wallet
 }
