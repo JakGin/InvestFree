@@ -13,6 +13,7 @@ import {
   Input,
   Button,
 } from "@chakra-ui/react"
+import { setCookie } from "@/utils/cookies"
 
 function Register() {
   const [error, setError] = useState({
@@ -102,8 +103,6 @@ function Register() {
       password: event.target[2].value,
     }
 
-    console.log(user)
-
     try {
       await fetch(`${import.meta.env.VITE_BACKEND_URL}/register/`, {
         method: "POST",
@@ -129,7 +128,10 @@ function Register() {
       })
 
       setIsAuthenticated(true)
-      navigate("/user")
+      // Set isAuthenticated cookie to check if user is authneticated after
+      // page refresh. sessionid cookie is httpOnly and can't be accessed
+      setCookie("isAuthenticated", "true", 7)
+      navigate("/dashboard")
     } catch (error) {
       if (error.response) {
         console.error(error.response.status)

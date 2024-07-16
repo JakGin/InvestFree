@@ -10,11 +10,12 @@ import Dashboard from "/src/pages/Dashboard"
 import NotFound from "/src/pages/NotFound"
 import Wallet from "./pages/Wallet"
 import Rankings from "./pages/Rankings"
+import { checkAuthenticated } from "./utils/checkAuthenticated"
 
 export const AuthContext = createContext(null)
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(checkAuthenticated())
 
   return (
     <AuthContext.Provider value={[isAuthenticated, setIsAuthenticated]}>

@@ -4,6 +4,7 @@ import { useContext } from "react"
 import { getCSRFToken } from "@/utils/tokens"
 import { MenuItem } from "@chakra-ui/react"
 import { LogOut } from "lucide-react"
+import { deleteCookie } from "@/utils/cookies"
 
 function LogoutButton() {
   const navigate = useNavigate()
@@ -19,6 +20,8 @@ function LogoutButton() {
         credentials: "include",
       })
       setIsAuthenticated(false)
+      // Remove isAuthenticated cookie
+      deleteCookie("isAuthenticated")
       navigate("/login")
     } catch (error) {
       if (error.response) {

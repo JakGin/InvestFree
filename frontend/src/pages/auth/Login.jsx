@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom"
 import { AuthContext } from "/src/App"
 import { getCSRFToken } from "@/utils/tokens"
 import { Button, FormControl, FormHelperText, FormLabel, Input } from "@chakra-ui/react"
+import { setCookie } from "@/utils/cookies"
 
 function Login() {
   const [error, setError] = useState(false)
@@ -28,7 +29,10 @@ function Login() {
         credentials: "include",
       })
       setIsAuthenticated(true)
-      navigate("/user")
+      // Set isAuthenticated cookie to check if user is authneticated after
+      // page refresh. sessionid cookie is httpOnly and can't be accessed
+      setCookie("isAuthenticated", "true", 7)
+      navigate("/dashboard")
     } catch (error) {
       if (error.response) {
         console.error(error.response.status)

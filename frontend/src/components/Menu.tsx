@@ -12,7 +12,14 @@ import {
   IconButton,
 } from "@chakra-ui/react"
 import { AddIcon, HamburgerIcon } from "@chakra-ui/icons"
-import { AreaChart, LogIn, LogOut, PersonStanding, Wallet } from "lucide-react"
+import {
+  AreaChart,
+  LogIn,
+  LogOut,
+  PersonStanding,
+  User,
+  Wallet,
+} from "lucide-react"
 import { Link } from "react-router-dom"
 import { AuthContext } from "@/App"
 import LogoutButton from "./LogoutButton"
@@ -40,14 +47,19 @@ const Menu = () => {
             <MenuItem icon={<Wallet />}>Wallet</MenuItem>
           </Link>
         )}
-        {!isAuthenticated && (
-          <Link to="/login">
-            <MenuItem icon={<LogIn />}>Login / Register</MenuItem>
+        {isAuthenticated && (
+          <Link to="/user">
+            <MenuItem icon={<User />}>User</MenuItem>
           </Link>
         )}
         <Link to="/rankings">
           <MenuItem icon={<PersonStanding />}>Top Players</MenuItem>
         </Link>
+        {!isAuthenticated && (
+          <Link to="/login">
+            <MenuItem icon={<LogIn />}>Login / Register</MenuItem>
+          </Link>
+        )}
         {isAuthenticated && <LogoutButton />}
       </MenuList>
     </ChakraMenu>
