@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
-from .models import User, Stock, Transaction
+from .models import *
 from .validations import validate_register_data
 
 class UserRegister(APIView):
@@ -24,7 +24,7 @@ class UserRegister(APIView):
             user = serializer.create(data) 
             if user:
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({"error": "User with that username already exist"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "User with this username or email already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLogin(APIView):
