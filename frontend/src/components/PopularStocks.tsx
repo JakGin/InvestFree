@@ -14,8 +14,8 @@ const stocks = [
     stockName: "Apple Inc.",
     stockTicker: "AAPL",
     stockPrice: 145.86,
-    stockChange: 0.86,
-    stockPercentage: 0.59,
+    stockChange: -0.86,
+    stockPercentage: -0.59,
   },
   {
     stockName: "Apple Inc.",

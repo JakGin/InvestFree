@@ -9,6 +9,7 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react"
+import { Link } from "react-router-dom"
 
 function Stock({
   stockName,
@@ -26,14 +27,25 @@ function Stock({
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">{stockName} ({stockTicker})</Heading>
+        <Heading size="md">
+          {stockName} ({stockTicker})
+        </Heading>
       </CardHeader>
       <CardBody>
-        <Text>View a summary of all your customers over the last month.</Text>
+        <Text className="flex gap-2 items-center">
+          {stockChange > 0 ? (
+            <BiSolidUpArrow color="green" />
+          ) : (
+            <BiSolidDownArrow color="red" />
+          )}
+          {stockChange} ({stockPercentage}%)
+        </Text>
       </CardBody>
-      <CardFooter>
-      <Button>View here</Button>
-    </CardFooter>
+      {/* <CardFooter>
+        <Link to="">
+          <Text>See on Google</Text>
+        </Link>
+      </CardFooter> */}
     </Card>
   )
 }
