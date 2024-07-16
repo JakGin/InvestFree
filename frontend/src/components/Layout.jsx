@@ -4,9 +4,9 @@ import Footer from "/src/components/Footer";
 
 function Layout() {
   return (
-    <div className="Layout--container">
+    <div className="flex flex-col h-screen">
       <Header />
-      <main className="flex flex-col flex-1 w-screen items-center p-6">
+      <main className="flex flex-col flex-1 items-center p-6">
         <Outlet />
       </main>
       <Footer />

@@ -26,12 +26,6 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-.Layout--container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
 .Header--container {
   display: flex;
   justify-content: space-between;
@@ -61,6 +55,7 @@ body {
   color: #aaa;
   font-weight: 300;
   padding: 1em 1em;
+  /* margin-top: auto; */
 }
 
 .Home--container {
@@ -120,42 +115,6 @@ body {
   min-width: 400px;
   max-width: 500px;
 }
-
-/* .Login--container form,
-.Register--container form {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
-
-.Login--container form input,
-.Register--container form input {
-  padding: 1em;
-  color: #111;
-  font-weight: 600;
-  border-radius: 5px;
-  border: 1px solid #39ac31;
-}
-
-.Login--container form input:focus,
-.Register--container form input:focus {
-  background-color: #dbf3da;
-  outline: none;
-}
-
-.Login--container form input[type="submit"],
-.Register--container form input[type="submit"] {
-  background-color: rgb(57, 172, 49);
-  border: 1px solid #187911;
-  cursor: pointer;
-  color: white;
-  font-size: 1.1rem;
-}
-
-.Login--container form input[type="submit"]:active,
-.Register--container form input[type="submit"]:active {
-  transform: translateY(-2px);
-} */
 
 .Login--container a,
 .Register--container a {

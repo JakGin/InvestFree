@@ -6,3 +6,12 @@ export function formattedCurrency(number) {
     maximumFractionDigits: 2,
   }).format(number)
 }
+
+export function formattedPercent(number) {
+  if (typeof number !== "number" || isNaN(number)) {
+    return ""
+  }
+  let percentString = number.toFixed(2)
+  percentString += "%"
+  return percentString
+}

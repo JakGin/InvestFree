@@ -1,8 +1,8 @@
 import { useState, useContext } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import ErrorMessage from "/src/utils/ErrorMessage"
 import { AuthContext } from "/src/App"
 import { getCSRFToken } from "@/utils/tokens"
+import { Button, FormControl, FormHelperText, FormLabel, Input } from "@chakra-ui/react"
 
 function Login() {
   const [error, setError] = useState(false)
@@ -43,11 +43,31 @@ function Login() {
 
   return (
     <div className="Login--container">
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Username" required />
-        <input type="password" placeholder="Password" required />
-        <input type="submit" value="Login" />
-        {error && <ErrorMessage text="Invalid Username and/or Password!" />}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-4"
+      >
+        <FormControl isRequired>
+          <FormLabel>Username</FormLabel>
+          <Input name="username" />
+          <FormHelperText>
+            Username will be displayed on your Dashboard.
+          </FormHelperText>
+        </FormControl>
+        {/* <FormControl isRequired>
+          <FormLabel>Email address</FormLabel>
+          <Input type="email" name="email" />
+          <FormHelperText>We'll never share your email.</FormHelperText>
+          <FormErrorMessage>Valid email is required.</FormErrorMessage>
+        </FormControl> */}
+        <FormControl isRequired>
+          <FormLabel>Password</FormLabel>
+          <Input type="password" name="password" />
+        </FormControl>
+
+        <Button type="submit" className="mt-6">
+          Login
+        </Button>
       </form>
       <Link to="/register">Don&apos;t have account. Register Here</Link>
     </div>

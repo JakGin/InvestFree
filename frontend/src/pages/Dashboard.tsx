@@ -8,7 +8,7 @@ export default function Dashboard() {
     <div className="flex flex-col gap-6">
       <WalletBriefInfo />
       <BuyStock />
-      {/* <PopularStocks /> */}
+      <PopularStocks />
     </div>
   )
 }
