@@ -6,16 +6,17 @@ import { ThemeSwitcher } from "./ThemeSwitcher"
 
 function Header() {
   return (
-    <div className="Header--container">
+    <nav className="Header--container">
       <Link className="Header--leftPanel" to="/">
         <img src="/src/img/logo.png" alt="logo" />
         <h1 className="font-medium tracking-wide text-lg">InvestFree</h1>
       </Link>
+      <div className="flex items-center gap-4">
+        <ThemeSwitcher />
 
-      <ThemeSwitcher />
-
-      <Menu />
-    </div>
+        <Menu />
+      </div>
+    </nav>
   )
 }
 
