@@ -7,6 +7,8 @@ import { useUser } from "@/hooks/useUser"
 const WalletBriefInfo = () => {
   const { userData, userError, userIsLoading } = useUser()
 
+  console.log(userData)
+
   if (userIsLoading) {
     return (
       <Card>
@@ -42,7 +44,7 @@ const WalletBriefInfo = () => {
             <h2 className="font-bold text-2xl">Account</h2>
           </div>
           <h2 className="text-xl">
-            {formattedCurrency(userData?.wallet?.account)}
+            {formattedCurrency(userData?.moneyInAccount)}
           </h2>
         </div>
         <div className="text-center">
@@ -51,7 +53,7 @@ const WalletBriefInfo = () => {
             <h2 className="font-bold text-2xl">Wallet</h2>
           </div>
           <h2 className="text-xl">
-            {formattedCurrency(userData?.wallet?.wallet)}
+            {formattedCurrency(userData?.moneyInStocks)}
           </h2>
         </div>
       </CardBody>

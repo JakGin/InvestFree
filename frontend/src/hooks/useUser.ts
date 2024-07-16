@@ -9,7 +9,26 @@ const fetcher = async (url: string): Promise<User> => {
   if (!response.ok) {
     throw new Error("Failed to fetch")
   }
-  return response.json()
+  const data = await response.json()
+  return {
+    user: {
+      username: data.username,
+      email: data.email,
+    },
+    moneyInAccount: data.money_in_account,
+    moneyInStocks: data.money_in_stocks,
+    wallet: {
+      stocks: data.stocks.map((stock: any) => ({
+        stockSymbol: stock.stock_symbol,
+        stockName: stock.stock_name,
+        StockBoughtPrice: stock.buy_unit_price,
+        units: stock.quantity,
+        buyDate: stock.buy_date,
+        benefit: stock.current_benefit,
+        benefitPercentage: stock.current_percentage_benefit,
+      })),
+    },
+  }
 }
 
 export function useUser() {

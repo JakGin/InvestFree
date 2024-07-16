@@ -1,8 +1,7 @@
 export type Wallet = {
-  account: number
-  wallet: number
   stocks: {
-    stockTicker: string
+    stockSymbol: string
+    stockName: string
     StockBoughtPrice: number
     units: number
     buyDate: string
@@ -16,5 +15,7 @@ export type User = {
     username: string
     email: string
   }
+  moneyInAccount: number
+  moneyInStocks: number
   wallet: Wallet
 }
