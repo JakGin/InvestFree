@@ -1,6 +1,67 @@
+import threading
+import time
+import json
+import os
+
+from datetime import datetime, timedelta
+
+import requests
+
 from django.apps import AppConfig
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+
+def fetch_stock_data():
+    """
+    Fetch stock data from the Polygon API and save it to a JSON file every 24
+    hours. If the data is not available from today, it will try they data from yesterday, the day before yesterday, and so on, up to 5 days back.
+    API documentation: https://polygon.io/docs/stocks/get_v2_aggs_grouped_locale_us_market_stocks__date
+    """
+    while True:
+        max_days_back = 5
+        success = False
+        today = datetime.today()
+
+        for _ in range(max_days_back):
+            formatted_date = today.strftime("%Y-%m-%d")
+            api_url = f"https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/{formatted_date}?adjusted=true&apiKey={os.getenv('POLYGON_STOCK_API_KEY')}"
+
+            try:
+                response = requests.get(api_url)
+
+                if response.status_code == 200:
+                    data = response.json()
+                    with open("investfree/stock_data.json", "w") as json_file:
+                        json.dump(data, json_file)
+                    print("Stock data fetched and saved successfully.")
+                    success = True
+                    break
+                else:
+                    print(
+                        f"Failed to fetch stock data for {formatted_date}. Status code: {response.status_code}"
+                    )
+
+            except Exception as e:
+                print(f"An error occurred: {e}")
+
+            # Go back one day
+            today -= timedelta(days=1)
+
+        if not success:
+            print("Failed to fetch stock data after 5 attempts.")
+
+        # Wait for 24 hours (86400 seconds)
+        time.sleep(86400)
 
 
 class InvestfreeConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'investfree'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "investfree"
+
+    def ready(self):
+        # Start the background thread
+        thread = threading.Thread(target=fetch_stock_data, daemon=True)
+        thread.start()

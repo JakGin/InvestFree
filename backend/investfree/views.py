@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.db import IntegrityError
 from rest_framework.authentication import SessionAuthentication
@@ -58,10 +60,13 @@ class UserLogout(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-# TODO the money in stock should be callculated based on the current stock price # not the price when the user bought it
+# TODO the money in stock should be calculated based on the current stock price # not the price when the user bought it
 @login_required
 @require_http_methods(["GET"])
 def get_user(request):
+    """
+    Get user data including his wallet and stocks.
+    """
     user = request.user
     transactions = Transaction.objects.filter(user=user, sell_date__isnull=True)
     transactions_list = [
@@ -94,3 +99,15 @@ def get_user(request):
     }
 
     return JsonResponse(user_data)
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_stocks_data(request):
+    """
+    Get stock data from the JSON file that is saved on the server.
+    This file is fetched from the Polygon API every 24 hours.
+    """
+    with open("investfree/stock_data.json", "r") as json_file:
+        data = json.load(json_file)
+    return JsonResponse(data)
