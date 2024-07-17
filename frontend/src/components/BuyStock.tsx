@@ -17,37 +17,18 @@ import {
   NumberDecrementStepper,
 } from "@chakra-ui/react"
 import StockInfo from "./StockInfo"
+import useSWR from "swr"
+import { fetcher } from "@/utils/fetcher"
+import { StocksData } from "@/types"
 
 const BuyStock = () => {
   const [stock, setStock] = useState("")
   const [nUnits, setNUnits] = useState("1")
 
-  const stocks = [
-    "Stock 1",
-    "Stock 2",
-    "Stock 3",
-    "Stock 4",
-    "Stock 5",
-    "Stock 6",
-    "Stock 7",
-    "Stock 8",
-    "Stock 9",
-    "Stock 10",
-    "Stock 11",
-    "Stock 12",
-    "Stock 13",
-    "Stock 14",
-    "Stock 15",
-    "Stock 16",
-    "Stock 17",
-    "Stock 18",
-    "Stock 19",
-    "Stock 20",
-    "Stock 21",
-    "Stock 22",
-    "Stock 23",
-    "Stock 24",
-  ]
+  const { data, error, isLoading } = useSWR<StocksData>(
+    "/get_stocks_data",
+    fetcher
+  )
 
   return (
     <div className="flex flex-col gap-8">
@@ -59,11 +40,16 @@ const BuyStock = () => {
             value={stock}
             onChange={(e) => setStock(e.target.value)}
           >
-            {stocks.map((stock) => (
-              <option key={stock} value={stock}>
-                {stock}
-              </option>
-            ))}
+            {data &&
+              data.results.sort((stockA, stockB) => {
+                if (stockA.T < stockB.T) return -1
+                if (stockA.T > stockB.T) return 1
+                return 0
+              }).map((stock) => (
+                <option key={stock.T} value={stock.T}>
+                  {stock.T}
+                </option>
+              ))}
           </Select>
         </div>
       </section>
@@ -72,7 +58,7 @@ const BuyStock = () => {
         <>
           <StockInfo
             stockName={stock}
-            stockSymbol="AAPL"
+            stockSymbol={stock}
             price={234.99}
             priceChange={-2.34}
             percentChange={-0.99}

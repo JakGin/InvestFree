@@ -19,3 +19,23 @@ export type User = {
   moneyInStocks: number
   wallet: Wallet
 }
+
+export type StocksData = {
+  adjusted: boolean
+  count: number
+  queryCound: number
+  request_id: string
+  results: {
+    T: string
+    c: string
+    h: number
+    l: number
+    n: number
+    o: number
+    t: string
+    v: number
+    vw: number
+  }[]
+  resultsCount: number
+  status: string
+}
