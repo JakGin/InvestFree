@@ -112,8 +112,6 @@ body {
   gap: 2em;
   margin-bottom: auto;
   margin-top: auto;
-  min-width: 400px;
-  max-width: 500px;
 }
 
 .Login--container a,

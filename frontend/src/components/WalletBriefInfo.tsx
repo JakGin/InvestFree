@@ -7,8 +7,6 @@ import { useUser } from "@/hooks/useUser"
 const WalletBriefInfo = () => {
   const { userData, userError, userIsLoading } = useUser()
 
-  console.log(userData)
-
   if (userIsLoading) {
     return (
       <Card>

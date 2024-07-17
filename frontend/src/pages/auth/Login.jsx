@@ -2,7 +2,13 @@ import { useState, useContext } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { AuthContext } from "/src/App"
 import { getCSRFToken } from "@/utils/tokens"
-import { Button, FormControl, FormHelperText, FormLabel, Input } from "@chakra-ui/react"
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+} from "@chakra-ui/react"
 import { setCookie } from "@/utils/cookies"
 
 function Login() {
@@ -19,20 +25,29 @@ function Login() {
     }
 
     try {
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCSRFToken(),
-        },
-        body: JSON.stringify(user),
-        credentials: "include",
-      })
-      setIsAuthenticated(true)
-      // Set isAuthenticated cookie to check if user is authneticated after
-      // page refresh. sessionid cookie is httpOnly and can't be accessed
-      setCookie("isAuthenticated", "true", 7)
-      navigate("/dashboard")
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/login/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken(),
+          },
+          body: JSON.stringify(user),
+          credentials: "include",
+        }
+      )
+      if (response?.ok) {
+        setIsAuthenticated(true)
+        // Set isAuthenticated cookie to check if user is authneticated after
+        // page refresh. sessionid cookie is httpOnly and can't be accessed
+        setCookie("isAuthenticated", "true", 7)
+        navigate("/dashboard")
+      } else {
+        // TODO
+        console.log("Login failed")
+        setError(true)
+      }
     } catch (error) {
       if (error.response) {
         console.error(error.response.status)
@@ -47,23 +62,12 @@ function Login() {
 
   return (
     <div className="Login--container">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-96 items-center self-center">
         <FormControl isRequired>
           <FormLabel>Username</FormLabel>
           <Input name="username" />
-          <FormHelperText>
-            Username will be displayed on your Dashboard.
-          </FormHelperText>
+          <FormHelperText>Your username</FormHelperText>
         </FormControl>
-        {/* <FormControl isRequired>
-          <FormLabel>Email address</FormLabel>
-          <Input type="email" name="email" />
-          <FormHelperText>We'll never share your email.</FormHelperText>
-          <FormErrorMessage>Valid email is required.</FormErrorMessage>
-        </FormControl> */}
         <FormControl isRequired>
           <FormLabel>Password</FormLabel>
           <Input type="password" name="password" />
@@ -73,7 +77,16 @@ function Login() {
           Login
         </Button>
       </form>
-      <Link to="/register">Don&apos;t have account. Register Here</Link>
+
+      {error && (
+        <div className="text-red-500 text-center">
+          Invalid username or password
+        </div>
+      )}
+
+      <Link to="/register" className="underline">
+        Don&apos;t have account. Register Here
+      </Link>
     </div>
   )
 }

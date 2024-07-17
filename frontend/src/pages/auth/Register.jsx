@@ -25,6 +25,7 @@ function Register() {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   })
 
   const [constraints, setConstraints] = useState([
@@ -38,6 +39,7 @@ function Register() {
       "Password must contain at least one special character from the set #?!@$%^&*-",
     ],
     [false, "Password must be at least 8 characters long"],
+    [false, "Passwords must match"],
   ])
 
   const [constraintsElement, setConstraintsElement] = useState()
@@ -48,6 +50,7 @@ function Register() {
     const username = credentials.username
     const email = credentials.email
     const password = credentials.password
+    const confirmPassword = credentials.confirmPassword
 
     setConstraints([
       [username.length >= 3, "Username must be at least 3 characters long"],
@@ -66,6 +69,7 @@ function Register() {
         "Password must contain at least one special character from the set #?!@$%^&*-",
       ],
       [password.length >= 8, "Password must be at least 8 characters long"],
+      [password === confirmPassword, "Passwords must match"],
     ])
   }, [credentials])
 
@@ -101,24 +105,34 @@ function Register() {
       username: event.target[0].value,
       email: event.target[1].value,
       password: event.target[2].value,
+      confirmPassword: event.target[3].value,
     }
 
+    const csrfToken = getCSRFToken()
+    let response
+
     try {
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/register/`, {
+      response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": getCSRFToken(),
+          "X-CSRFToken": csrfToken,
         },
         body: JSON.stringify(user),
         credentials: "include",
       })
 
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/`, {
+      if (!response.ok) {
+        //TODO
+        console.log("Registration failed")
+        return
+      }
+
+      response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": getCSRFToken(),
+          "X-CSRFToken": csrfToken,
         },
         body: JSON.stringify({
           username: event.target[0].value,
@@ -126,12 +140,17 @@ function Register() {
         }),
         credentials: "include",
       })
-
-      setIsAuthenticated(true)
-      // Set isAuthenticated cookie to check if user is authneticated after
-      // page refresh. sessionid cookie is httpOnly and can't be accessed
-      setCookie("isAuthenticated", "true", 7)
-      navigate("/dashboard")
+      console.log(response)
+      if (response.ok) {
+        setIsAuthenticated(true)
+        // Set isAuthenticated cookie to check if user is authneticated after
+        // page refresh. sessionid cookie is httpOnly and can't be accessed
+        setCookie("isAuthenticated", "true", 7)
+        navigate("/dashboard")
+      } else {
+        //TODO
+        console.log("Login failed")
+      }
     } catch (error) {
       if (error.response) {
         console.error(error.response.status)
@@ -151,11 +170,13 @@ function Register() {
     const nonEmptyConstraints = constraints.filter((constraint, index) => {
       if (index === 0) {
         return credentials.username !== "" ? true : false
-      }
-      if (index === 1) {
+      } else if (index === 1) {
         return credentials.email !== "" ? true : false
+      } else if ([2, 3, 4, 5, 6].includes(index)) {
+        return credentials.password !== "" ? true : false
+      } else {
+        return credentials.confirmPassword !== "" ? true : false
       }
-      return credentials.password !== "" ? true : false
     })
 
     return nonEmptyConstraints
@@ -173,7 +194,7 @@ function Register() {
       <form
         onSubmit={handleSubmit}
         onChange={handleFormChange}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 w-96 items-center self-center"
       >
         <FormControl isRequired>
           <FormLabel>Username</FormLabel>
@@ -196,6 +217,11 @@ function Register() {
             There is something wrong with this password.
           </FormErrorMessage>
         </FormControl>
+        <FormControl isRequired>
+          <FormLabel>Repeat Password</FormLabel>
+          <Input type="password" name="confirmPassword" />
+          <FormErrorMessage>Passwords do not match.</FormErrorMessage>
+        </FormControl>
 
         <Button type="submit" className="mt-6">
           Register
@@ -203,7 +229,9 @@ function Register() {
       </form>
 
       {constraintsElement}
-      <Link to="/login">Already have account. Login Here</Link>
+      <Link to="/login" className="underline">
+        Already have account. Login Here
+      </Link>
     </div>
   )
 }
