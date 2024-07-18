@@ -1,55 +1,34 @@
 import React from "react"
-import Stock from "./Stock"
+import { Stock } from "./Stock"
 import { SimpleGrid } from "@chakra-ui/react"
-
-const stocks = [
-  {
-    stockName: "Apple Inc.",
-    stockTicker: "AAPL",
-    stockPrice: 145.86,
-    stockChange: 0.86,
-    stockPercentage: 0.59,
-  },
-  {
-    stockName: "Apple Inc.",
-    stockTicker: "AAPL",
-    stockPrice: 145.86,
-    stockChange: -0.86,
-    stockPercentage: -0.59,
-  },
-  {
-    stockName: "Apple Inc.",
-    stockTicker: "AAPL",
-    stockPrice: 145.86,
-    stockChange: 0.86,
-    stockPercentage: 0.59,
-  },
-  {
-    stockName: "Apple Inc.",
-    stockTicker: "AAPL",
-    stockPrice: 145.86,
-    stockChange: 0.86,
-    stockPercentage: 0.59,
-  },
-]
+import { fetcher } from "@/utils/fetcher"
+import useSWR from "swr"
+import { StocksData } from "@/types"
 
 const PopularStocks = () => {
+  const { data, error, isLoading } = useSWR<StocksData[]>(
+    "/get_stocks_data",
+    fetcher
+  )
+
+  if (isLoading) return <div>Loading...</div>
+
   return (
     <div className="w-full">
       <h1 className="text-2xl font-medium py-4 text-center">Popular Stocks</h1>
       <SimpleGrid
         spacing={4}
-        templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+        templateColumns="repeat(auto-fill, minmax(250px, 1fr))"
         className="max-w-7xl mx-auto"
       >
-        {stocks.map((stock, index) => (
+        {data?.slice(0, 6).map((stock, index) => (
           <Stock
             key={index}
-            stockName={stock.stockName}
-            stockTicker={stock.stockTicker}
-            stockPrice={stock.stockPrice}
-            stockChange={stock.stockChange}
-            stockPercentage={stock.stockPercentage}
+            stockName={stock.name}
+            stockSymbol={stock.T}
+            price={stock.c}
+            priceChange={stock.todayPriceChange}
+            percentChange={stock.todayPriceChangePercentage}
           />
         ))}
       </SimpleGrid>

@@ -8,52 +8,66 @@ import {
   Heading,
   Text,
   Button,
+  Link,
 } from "@chakra-ui/react"
-import { formattedPercent } from "@/utils/currency"
+import { formattedPercent, formattedCurrency } from "@/utils/currency"
 import { Stock as StockT } from "@/types"
 import { getCSRFToken } from "@/utils/tokens"
 import { mutate } from "swr"
 
-export default function Stock({
+export function Stock({
   stockName,
-  stockTicker,
-  stockPrice,
-  stockChange,
-  stockPercentage,
+  stockSymbol,
+  price,
+  priceChange,
+  percentChange,
 }: {
   stockName: string
-  stockTicker: string
-  stockPrice: number
-  stockChange: number
-  stockPercentage: number
+  stockSymbol: string
+  price: number
+  priceChange: number
+  percentChange: number
 }) {
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">
-          {stockName} ({stockTicker})
+        <Heading size="md" className="text-center">
+          {stockSymbol}, {stockName}
         </Heading>
       </CardHeader>
-      <CardBody>
-        <Text className="flex gap-2 items-center">
-          {stockChange > 0 ? (
-            <BiSolidUpArrow color="green" />
-          ) : (
-            <BiSolidDownArrow color="red" />
-          )}
-          {stockChange} ({formattedPercent(stockPercentage)})
+      <CardBody className="flex flex-col gap-2 justify-between">
+        <Text className="text-center">
+          Price for unit
+          <div className="text-lg font-medium">{formattedCurrency(price)}</div>
+        </Text>
+        <Text className="flex flex-col items-center">
+          Last day change
+          <div className="text-lg font-medium flex items-center gap-1">
+            {priceChange > 0 ? (
+              <BiSolidUpArrow color="green" />
+            ) : (
+              <BiSolidDownArrow color="red" />
+            )}
+            <Text>
+              {formattedCurrency(priceChange)} (
+              {formattedPercent(percentChange)})
+            </Text>
+          </div>
         </Text>
       </CardBody>
-      {/* <CardFooter>
-        <Link to="">
-          <Text>See on Google</Text>
+      <CardFooter className="flex self-center">
+        <Link
+          href={`https://finance.yahoo.com/quote/${stockSymbol}/`}
+          isExternal
+        >
+          <Text className="underline">Check on Yahoo Finance</Text>
         </Link>
-      </CardFooter> */}
+      </CardFooter>
     </Card>
   )
 }
 
-export function Stock2({ stock }: { stock: StockT }) {
+export function StockInWallet({ stock }: { stock: StockT }) {
   async function handleSell(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     try {
@@ -113,7 +127,9 @@ export function Stock2({ stock }: { stock: StockT }) {
       </CardBody>
       <CardFooter>
         <form onSubmit={handleSell}>
-          <Button type="submit" colorScheme="red">SELL</Button>
+          <Button type="submit" colorScheme="red">
+            SELL
+          </Button>
         </form>
       </CardFooter>
     </Card>
