@@ -8,7 +8,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
-
+from django.utils import timezone
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
 from .models import *
 from .validations import validate_register_data
@@ -213,7 +213,7 @@ def stock(request):
             user=user,
             stock_symbol=stock_symbol,
             quantity=quantity,
-            buy_date=buy_date,
+            # buy_date=buy_date,
             sell_date__isnull=True,
         ).first()
 
@@ -243,7 +243,7 @@ def stock(request):
         sell_unit_price = stock["c"]
 
         # Check if the is not front-back unit price mismatch
-        if buy_unit_price != unit_price:
+        if sell_unit_price != unit_price:
             return JsonResponse(
                 {
                     "error": "Requested unit price does not match the current unit price, please refresh the page"
@@ -255,7 +255,7 @@ def stock(request):
         user.save()
 
         transaction.sell_unit_price = sell_unit_price
-        transaction.sell_date = datetime.now()
+        transaction.sell_date = timezone.now()
         transaction.save()
 
         return JsonResponse(

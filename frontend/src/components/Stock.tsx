@@ -9,8 +9,10 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react"
-import { useUser } from "@/hooks/useUser"
 import { formattedPercent } from "@/utils/currency"
+import { Stock as StockT } from "@/types"
+import { getCSRFToken } from "@/utils/tokens"
+import { mutate } from "swr"
 
 export default function Stock({
   stockName,
@@ -51,30 +53,38 @@ export default function Stock({
   )
 }
 
-export function Stock2() {
-  const { userData, userError, userIsLoading } = useUser()
+export function Stock2({ stock }: { stock: StockT }) {
+  async function handleSell(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/stock/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken() || "",
+          },
+          body: JSON.stringify({
+            stockSymbol: stock.stockSymbol,
+            unitPrice: stock.StockBoughtPrice,
+            quantity: Number(stock.units),
+            buyDate: stock.buyDate,
+          }),
+          credentials: "include",
+        }
+      )
 
-  if (userIsLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <p>User Loading...</p>
-        </CardHeader>
-      </Card>
-    )
-  }
-
-  if (userError) {
-    return (
-      <Card>
-        <CardHeader>
-          <h2 className="text-center text-2xl">Error</h2>
-        </CardHeader>
-        <CardBody>
-          <p>Something went wrong ...</p>
-        </CardBody>
-      </Card>
-    )
+      if (response.ok) {
+        console.log("Stock sold successfully")
+        mutate("/user")
+      } else {
+        const error = await response.json()
+        console.error("Failed to sell stock", error)
+      }
+    } catch (error) {
+      console.error("Failed to sell stock", error)
+    }
   }
 
   return (
@@ -83,27 +93,27 @@ export function Stock2() {
       className="flex items-center"
     >
       <CardHeader>
-        <h1>Apple Inc. (AAPL)</h1>
+        <h1>{stock.stockName}</h1>
         <Text className="flex gap-2 items-center">
-          {2.22 > 0 ? (
+          {9.99 > 0 ? (
             <BiSolidUpArrow color="green" />
           ) : (
             <BiSolidDownArrow color="red" />
           )}
-          {2.22} ({formattedPercent(1.21)})
+          {9.99} ({formattedPercent(9.99)})
         </Text>
       </CardHeader>
       <CardBody>
-        <p>Current Price: $123.45</p>
-        <p>Units: 10</p>
-        <p>Buy date: 11.08.2021</p>
-        <p>Stock Bought Price: $123.11</p>
-        <p>Benefit: $123.45</p>
-        <p>Benefit Percentage: 10%</p>
+        <p>Current Price: $999.99</p>
+        <p>Units: {stock.units}</p>
+        <p>Buy date: {stock.buyDate}</p>
+        <p>Stock Bought unit Price: {stock.StockBoughtPrice}</p>
+        <p>Benefit: $99.99</p>
+        <p>Benefit Percentage: 99%</p>
       </CardBody>
       <CardFooter>
-        <form>
-          <Button colorScheme="red">SELL</Button>
+        <form onSubmit={handleSell}>
+          <Button type="submit" colorScheme="red">SELL</Button>
         </form>
       </CardFooter>
     </Card>

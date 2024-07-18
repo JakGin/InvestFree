@@ -1,13 +1,15 @@
+export type Stock = {
+  stockSymbol: string
+  stockName: string
+  StockBoughtPrice: number
+  units: number
+  buyDate: string
+  benefit: number
+  benefitPercentage: number
+}
+
 export type Wallet = {
-  stocks: {
-    stockSymbol: string
-    stockName: string
-    StockBoughtPrice: number
-    units: number
-    buyDate: string
-    benefit: number
-    benefitPercentage: number
-  }[]
+  stocks: Stock[]
 }
 
 export type User = {

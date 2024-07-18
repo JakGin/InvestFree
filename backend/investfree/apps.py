@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import requests
 
 from django.apps import AppConfig
+from django.conf import settings
 from dotenv import load_dotenv
 
 
@@ -20,6 +21,10 @@ def fetch_stock_data():
     hours. If the data is not available from today, it will try they data from yesterday, the day before yesterday, and so on, up to 5 days back.
     API documentation: https://polygon.io/docs/stocks/get_v2_aggs_grouped_locale_us_market_stocks__date
     """
+    if settings.DEBUG:
+        print("Debug mode is on, skipping stock data fetch.")
+        return
+
     while True:
         max_days_back = 5
         success = False
