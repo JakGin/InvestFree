@@ -10,5 +10,5 @@ urlpatterns = [
     path("get_stocks_data/", views.get_stocks_data, name="get_stocks_data"),
     # Needed paths
     # transaction POST DELETE
-    # Add or delete transaction
+    path("stock/", views.stock, name="stock"),
 ]

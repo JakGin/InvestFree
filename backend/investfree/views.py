@@ -1,5 +1,7 @@
 import json
 
+from datetime import datetime
+
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.db import IntegrityError
 from rest_framework.authentication import SessionAuthentication
@@ -110,4 +112,161 @@ def get_stocks_data(request):
     """
     with open("investfree/stock_data.json", "r") as json_file:
         data = json.load(json_file)
+        stocks = data["results"]
+        stocks.sort(key=lambda x: x["T"])
     return JsonResponse(data)
+
+
+@login_required
+def stock(request):
+    """
+    Required fields in body:
+    - stockSymbol: str
+    - unitPrice: float
+    - quantity: int > 0
+    -* buyDate: str (only for DELETE method)
+    """
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user = request.user
+        stock_symbol = data["stockSymbol"]
+        unit_price = data["unitPrice"]
+        quantity = data["quantity"]
+
+        if quantity <= 0 or not isinstance(quantity, int):
+            return JsonResponse(
+                {"error": "Quantity must be greater than 0"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            with open("investfree/stock_data.json", "r") as json_file:
+                stock_data = json.load(json_file)
+        except FileNotFoundError:
+            return JsonResponse(
+                {"error": "There was an error on the server"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        stocks = stock_data["results"]
+        stock = [stock for stock in stocks if stock.get("T") == stock_symbol]
+        if len(stock) == 0:
+            return JsonResponse(
+                {"error": f"Stock with symbol {stock_symbol} not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        stock = stock[0]
+        buy_unit_price = stock["c"]
+
+        if buy_unit_price != unit_price:
+            return JsonResponse(
+                {
+                    "error": "Requested unit price does not match the current unit price, please refresh the page"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if user.money_in_account < buy_unit_price * quantity:
+            return JsonResponse(
+                {"error": "You don't have enough money in your account"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user.money_in_account -= buy_unit_price * quantity
+        user.save()
+
+        transaction = Transaction.objects.create(
+            user=user,
+            stock_symbol=stock_symbol,
+            stock_name=stock_symbol,
+            quantity=quantity,
+            buy_unit_price=buy_unit_price,
+        )
+        transaction.save()
+
+        return JsonResponse(
+            {
+                "stock_symbol": transaction.stock_symbol,
+                "stock_name": transaction.stock_name,
+                "quantity": transaction.quantity,
+                "buy_unit_price": transaction.buy_unit_price,
+                "buy_date": transaction.buy_date,
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+    elif request.method == "DELETE":
+        data = json.loads(request.body)
+        user = request.user
+        stock_symbol = data["stockSymbol"]
+        unit_price = data["unitPrice"]
+        quantity = data["quantity"]
+        buy_date = data["buyDate"]
+
+        if quantity <= 0 or not isinstance(quantity, int):
+            return JsonResponse(
+                {"error": "Quantity must be greater than 0"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        transaction = Transaction.objects.filter(
+            user=user,
+            stock_symbol=stock_symbol,
+            quantity=quantity,
+            buy_date=buy_date,
+            sell_date__isnull=True,
+        ).first()
+
+        if transaction is None:
+            return JsonResponse(
+                {"error": "Transaction not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        try:
+            with open("investfree/stock_data.json", "r") as json_file:
+                stock_data = json.load(json_file)
+        except FileNotFoundError:
+            return JsonResponse(
+                {"error": "There was an error on the server"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        stocks = stock_data["results"]
+        stock = [stock for stock in stocks if stock.get("T") == stock_symbol]
+        if len(stock) == 0:
+            return JsonResponse(
+                {"error": f"Stock with symbol {stock_symbol} not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        stock = stock[0]
+        sell_unit_price = stock["c"]
+
+        # Check if the is not front-back unit price mismatch
+        if buy_unit_price != unit_price:
+            return JsonResponse(
+                {
+                    "error": "Requested unit price does not match the current unit price, please refresh the page"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user.money_in_account += sell_unit_price * quantity
+        user.save()
+
+        transaction.sell_unit_price = sell_unit_price
+        transaction.sell_date = datetime.now()
+        transaction.save()
+
+        return JsonResponse(
+            {
+                "stock_symbol": transaction.stock_symbol,
+                "stock_name": transaction.stock_name,
+                "quantity": transaction.quantity,
+                "buy_unit_price": transaction.buy_unit_price,
+                "buy_date": transaction.buy_date,
+                "sell_unit_price": transaction.sell_unit_price,
+                "sell_date": transaction.sell_date,
+            },
+            status=status.HTTP_200_OK,
+        )

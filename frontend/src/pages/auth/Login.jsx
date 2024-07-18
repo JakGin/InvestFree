@@ -23,7 +23,7 @@ function Login() {
       username: event.target[0].value,
       password: event.target[1].value,
     }
-
+    
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/login/`,

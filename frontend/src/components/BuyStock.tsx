@@ -20,15 +20,51 @@ import StockInfo from "./StockInfo"
 import useSWR from "swr"
 import { fetcher } from "@/utils/fetcher"
 import { StocksData } from "@/types"
+import { getCSRFToken } from "@/utils/tokens"
 
 const BuyStock = () => {
-  const [stock, setStock] = useState("")
+  const [stock, setStock] = useState({} as any)
   const [nUnits, setNUnits] = useState("1")
 
   const { data, error, isLoading } = useSWR<StocksData>(
     "/get_stocks_data",
     fetcher
   )
+
+  async function handleBuy(event: any) {
+    event.preventDefault()
+    console.log("Buying stock", stock.T, "with", nUnits, "units")
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/stock/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken() || "",
+          },
+          body: JSON.stringify({
+            stockSymbol: stock.T,
+            unitPrice: stock.c,
+            quantity: Number(nUnits),
+          }),
+          credentials: "include",
+        }
+      )
+
+      if (response.ok) {
+        console.log("Stock bought successfully")
+        // TO CHANGE
+        alert(`Buying stock: ${stock.T} with: ${nUnits} units`)
+      } else {
+        const error = await response.json()
+        console.error("Failed to buy stock", error)
+      }
+    } catch (error) {
+      console.error("Failed to buy stock", error)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -37,15 +73,15 @@ const BuyStock = () => {
         <div>
           <Select
             placeholder="Select stock"
-            value={stock}
-            onChange={(e) => setStock(e.target.value)}
+            value={stock.T}
+            onChange={(e) => {
+              const stockName = e.target.value
+              const stock = data?.results.find((stock) => stock.T === stockName)
+              setStock(stock)
+            }}
           >
             {data &&
-              data.results.sort((stockA, stockB) => {
-                if (stockA.T < stockB.T) return -1
-                if (stockA.T > stockB.T) return 1
-                return 0
-              }).map((stock) => (
+              data.results.map((stock) => (
                 <option key={stock.T} value={stock.T}>
                   {stock.T}
                 </option>
@@ -57,22 +93,22 @@ const BuyStock = () => {
       {stock && (
         <>
           <StockInfo
-            stockName={stock}
-            stockSymbol={stock}
-            price={234.99}
-            priceChange={-2.34}
-            percentChange={-0.99}
+            stockName={stock.T}
+            stockSymbol={stock.T}
+            price={stock.c}
+            priceChange={-9.99}
+            percentChange={-9.99}
           />
 
           <section className="flex flex-col">
             <h1 className="text-2xl font-medium py-2">Order Units</h1>
-            <form className="flex flex-col gap-4">
+            <form className="flex flex-col gap-4" onSubmit={handleBuy}>
               <FormControl isRequired>
                 <FormLabel>Enter number of units to buy</FormLabel>
                 <NumberInput
                   defaultValue={1}
                   min={1}
-                  max={20}
+                  max={1000000}
                   precision={0}
                   name="units"
                   onChange={(value) => setNUnits(value)}
@@ -92,7 +128,7 @@ const BuyStock = () => {
               {Number(nUnits) > 0 && (
                 <p className="font-medium text-lg">
                   Total cost:{" "}
-                  <span>{formattedCurrency(234.99 * Number(nUnits))}</span>
+                  <span>{formattedCurrency(stock.c * Number(nUnits))}</span>
                 </p>
               )}
 
