@@ -23,17 +23,16 @@ import { StocksData } from "@/types"
 import { getCSRFToken } from "@/utils/tokens"
 
 const BuyStock = () => {
-  const [stock, setStock] = useState({} as any)
-  const [nUnits, setNUnits] = useState("1")
+  const [stock, setStock] = useState<StocksData | undefined>(undefined)
+  const [nUnits, setNUnits] = useState("")
 
-  const { data, error, isLoading } = useSWR<StocksData>(
+  const { data, error, isLoading } = useSWR<StocksData[]>(
     "/get_stocks_data",
     fetcher
   )
 
-  async function handleBuy(event: any) {
+  async function handleBuy(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    console.log("Buying stock", stock.T, "with", nUnits, "units")
 
     try {
       const response = await fetch(
@@ -45,8 +44,8 @@ const BuyStock = () => {
             "X-CSRFToken": getCSRFToken() || "",
           },
           body: JSON.stringify({
-            stockSymbol: stock.T,
-            unitPrice: stock.c,
+            stockSymbol: stock?.T,
+            unitPrice: stock?.c,
             quantity: Number(nUnits),
           }),
           credentials: "include",
@@ -56,7 +55,8 @@ const BuyStock = () => {
       if (response.ok) {
         console.log("Stock bought successfully")
         // TO CHANGE
-        alert(`Buying stock: ${stock.T} with: ${nUnits} units`)
+        alert(`Buying stock: ${stock?.T} with: ${nUnits} units`)
+        setNUnits("")
       } else {
         const error = await response.json()
         console.error("Failed to buy stock", error)
@@ -67,21 +67,21 @@ const BuyStock = () => {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <section>
+    <div className="flex flex-col gap-8 w-fit self-center">
+      <section className="w-[350px]">
         <h1 className="text-2xl font-medium py-2">Search for a Stock</h1>
         <div>
           <Select
             placeholder="Select stock"
-            value={stock.T}
+            value={stock?.T}
             onChange={(e) => {
-              const stockName = e.target.value
-              const stock = data?.results.find((stock) => stock.T === stockName)
+              const stockSymbol = e.target.value
+              const stock = data?.find((stock) => stock.T === stockSymbol)
               setStock(stock)
             }}
           >
             {data &&
-              data.results.map((stock) => (
+              data.map((stock) => (
                 <option key={stock.T} value={stock.T}>
                   {stock.T}
                 </option>
@@ -92,13 +92,15 @@ const BuyStock = () => {
 
       {stock && (
         <>
-          <StockInfo
-            stockName={stock.T}
-            stockSymbol={stock.T}
-            price={stock.c}
-            priceChange={-9.99}
-            percentChange={-9.99}
-          />
+          <div className="self-center w-[350px]">
+            <StockInfo
+              stockName={stock.name}
+              stockSymbol={stock.T}
+              price={stock.c}
+              priceChange={-9.99}
+              percentChange={-9.99}
+            />
+          </div>
 
           <section className="flex flex-col">
             <h1 className="text-2xl font-medium py-2">Order Units</h1>

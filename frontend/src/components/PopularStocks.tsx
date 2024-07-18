@@ -35,11 +35,12 @@ const stocks = [
 
 const PopularStocks = () => {
   return (
-    <div>
-      <h1 className="text-2xl font-medium py-4">Popular Stocks</h1>
+    <div className="w-full">
+      <h1 className="text-2xl font-medium py-4 text-center">Popular Stocks</h1>
       <SimpleGrid
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+        className="max-w-7xl mx-auto"
       >
         {stocks.map((stock, index) => (
           <Stock

@@ -31,7 +31,7 @@ const WalletBriefInfo = () => {
   }
 
   return (
-    <Card>
+    <Card className="w-fit self-center">
       <CardHeader>
         <h2 className="text-center text-2xl">{userData?.user.username}</h2>
       </CardHeader>

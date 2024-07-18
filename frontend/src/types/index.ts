@@ -23,13 +23,9 @@ export type User = {
 }
 
 export type StocksData = {
-  adjusted: boolean
-  count: number
-  queryCound: number
-  request_id: string
-  results: {
+    name: string
     T: string
-    c: string
+    c: number
     h: number
     l: number
     n: number
@@ -37,7 +33,4 @@ export type StocksData = {
     t: string
     v: number
     vw: number
-  }[]
-  resultsCount: number
-  status: string
 }
