@@ -114,14 +114,23 @@ def get_stocks_data(request):
     with open("investfree/stock_data.json", "r") as json_file:
         data = json.load(json_file)
         stocks = data["results"]
+    # with open("investfree/stock_data_previous.json", "r") as json_file:
+    #     data = json.load(json_file)
+    #     previous_stocks = data["results"]
+
     with open("investfree/symbol_name_mapping.csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
         symbol_name_mapping = {row[0]: row[1] for row in csv_reader}
     filtered_stocks = [
         stock for stock in stocks if stock.get("T") in symbol_name_mapping
     ]
+
     for stock in filtered_stocks:
         stock["name"] = symbol_name_mapping[stock["T"]]
+        stock["todayPriceChange"] = stock["c"] - stock["o"]
+        stock["todayPriceChangePercentage"] = (
+            stock["todayPriceChange"] / stock["o"]
+        ) * 100
 
     filtered_stocks.sort(key=lambda x: x["T"])
 

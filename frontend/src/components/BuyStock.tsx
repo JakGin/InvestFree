@@ -97,8 +97,8 @@ const BuyStock = () => {
               stockName={stock.name}
               stockSymbol={stock.T}
               price={stock.c}
-              priceChange={-9.99}
-              percentChange={-9.99}
+              priceChange={stock.todayPriceChange}
+              percentChange={stock.todayPriceChangePercentage}
             />
           </div>
 

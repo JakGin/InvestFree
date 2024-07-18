@@ -9,6 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import React from "react"
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi"
 
 const StockInfo = ({
   stockName,
@@ -32,24 +33,26 @@ const StockInfo = ({
             {stockSymbol}, {stockName}
           </Heading>
         </CardHeader>
-        <CardBody>
-          <Text>
-            Price for unit:{" "}
-            <span className="text-lg font-medium">
+        <CardBody className="flex gap-4 justify-between">
+          <Text className="text-center">
+            Price for unit
+            <div className="text-lg font-medium">
               {formattedCurrency(price)}
-            </span>
+            </div>
           </Text>
-          <Text>
-            Today price change:{" "}
-            <span className="text-lg font-medium">
-              {formattedCurrency(priceChange)}
-            </span>
-          </Text>
-          <Text>
-            Today percetage change:{" "}
-            <span className="text-lg font-medium">
-              {formattedCurrency(percentChange)}
-            </span>
+          <Text className="text-center">
+            Last day change
+            <div className="text-lg font-medium flex items-center gap-1">
+              {priceChange > 0 ? (
+                <BiSolidUpArrow color="green" />
+              ) : (
+                <BiSolidDownArrow color="red" />
+              )}
+              <Text>
+                {formattedCurrency(priceChange)} (
+                {formattedPercent(percentChange)})
+              </Text>
+            </div>
           </Text>
         </CardBody>
         <CardFooter>

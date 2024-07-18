@@ -24,6 +24,8 @@ export type User = {
 
 export type StocksData = {
     name: string
+    todayPriceChange: number
+    todayPriceChangePercentage: number
     T: string
     c: number
     h: number

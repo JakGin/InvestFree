@@ -27,7 +27,8 @@ def fetch_stock_data():
 
     while True:
         max_days_back = 5
-        success = False
+        current_data = None
+        previous_data = None
         today = datetime.today()
 
         for _ in range(max_days_back):
@@ -38,25 +39,35 @@ def fetch_stock_data():
                 response = requests.get(api_url)
 
                 if response.status_code == 200:
-                    data = response.json()
-                    with open("investfree/stock_data.json", "w") as json_file:
-                        json.dump(data, json_file)
-                    print("Stock data fetched and saved successfully.")
-                    success = True
-                    break
+                    if current_data is None:
+                        current_data = response.json()
+                    else:
+                        previous_data = response.json()
                 else:
                     print(
                         f"Failed to fetch stock data for {formatted_date}. Status code: {response.status_code}"
                     )
-
             except Exception as e:
                 print(f"An error occurred: {e}")
 
+            # If previous and current data was fetched break
+            if current_data is not None and previous_data is not None:
+                break
             # Go back one day
             today -= timedelta(days=1)
 
-        if not success:
+        if current_data is None or previous_data is None:
             print("Failed to fetch stock data after 5 attempts.")
+        else:
+            try:
+                with open("investfree/stock_data.json", "w") as json_file:
+                    json.dump(current_data, json_file)
+                with open("investfree/stock_data_previous.json", "w") as json_file:
+                    json.dump(previous_data, json_file)
+            except Exception as e:
+                print(f"An error occurred: {e}")
+            else:
+                print("Successfully fetched stock data.")
 
         # Wait for 24 hours (86400 seconds)
         time.sleep(86400)
