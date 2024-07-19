@@ -6,10 +6,11 @@ import {
   CardHeader,
   Heading,
   Link,
+  Stat,
+  StatArrow,
   Text,
 } from "@chakra-ui/react"
 import React from "react"
-import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi"
 
 const StockInfo = ({
   stockName,
@@ -43,11 +44,9 @@ const StockInfo = ({
           <Text className="text-center">
             Last day change
             <div className="text-lg font-medium flex items-center gap-1">
-              {priceChange > 0 ? (
-                <BiSolidUpArrow color="green" />
-              ) : (
-                <BiSolidDownArrow color="red" />
-              )}
+              <Stat>
+                <StatArrow type={priceChange > 0 ? "increase" : "decrease"} />
+              </Stat>
               <Text>
                 {formattedCurrency(priceChange)} (
                 {formattedPercent(percentChange)})

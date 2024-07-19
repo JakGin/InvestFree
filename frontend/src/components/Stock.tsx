@@ -1,5 +1,4 @@
 import React from "react"
-import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi"
 import {
   Card,
   CardHeader,
@@ -9,6 +8,8 @@ import {
   Text,
   Button,
   Link,
+  StatArrow,
+  Stat,
 } from "@chakra-ui/react"
 import { formattedPercent, formattedCurrency } from "@/utils/currency"
 import { Stock as StockT } from "@/types"
@@ -43,11 +44,9 @@ export function Stock({
         <Text className="flex flex-col items-center">
           Last day change
           <div className="text-lg font-medium flex items-center gap-1">
-            {priceChange > 0 ? (
-              <BiSolidUpArrow color="green" />
-            ) : (
-              <BiSolidDownArrow color="red" />
-            )}
+            <Stat>
+              <StatArrow type={priceChange > 0 ? "increase" : "decrease"} />
+            </Stat>
             <Text>
               {formattedCurrency(priceChange)} (
               {formattedPercent(percentChange)})
@@ -109,11 +108,9 @@ export function StockInWallet({ stock }: { stock: StockT }) {
       <CardHeader>
         <h1>{stock.stockName}</h1>
         <Text className="flex gap-2 items-center">
-          {9.99 > 0 ? (
-            <BiSolidUpArrow color="green" />
-          ) : (
-            <BiSolidDownArrow color="red" />
-          )}
+          <Stat>
+            <StatArrow type={9.99 > 0 ? "increase" : "decrease"} />
+          </Stat>
           {9.99} ({formattedPercent(9.99)})
         </Text>
       </CardHeader>
