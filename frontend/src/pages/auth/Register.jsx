@@ -140,7 +140,7 @@ function Register() {
         }),
         credentials: "include",
       })
-      console.log(response)
+      
       if (response.ok) {
         setIsAuthenticated(true)
         // Set isAuthenticated cookie to check if user is authneticated after

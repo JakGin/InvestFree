@@ -30,10 +30,14 @@ const WalletBriefInfo = () => {
     )
   }
 
+  if (!userData) {
+    return <div></div>
+  }
+
   return (
     <Card className="w-fit self-center">
       <CardHeader>
-        <h2 className="text-center text-3xl font-bold">{userData?.user.username}</h2>
+        <h2 className="text-center text-3xl font-bold">{userData.username}</h2>
       </CardHeader>
       <CardBody className="flex gap-12 lg:gap-16 justify-center">
         <div className="text-center">
@@ -42,7 +46,7 @@ const WalletBriefInfo = () => {
             <h2 className="font-bold text-2xl">Account</h2>
           </div>
           <h2 className="text-xl">
-            {formattedCurrency(userData?.moneyInAccount)}
+            {formattedCurrency(userData.moneyInAccount)}
           </h2>
         </div>
         <div className="text-center">
@@ -51,7 +55,7 @@ const WalletBriefInfo = () => {
             <h2 className="font-bold text-2xl">Wallet</h2>
           </div>
           <h2 className="text-xl">
-            {formattedCurrency(userData?.moneyInStocks)}
+            {formattedCurrency(userData.moneyInStocks)}
           </h2>
         </div>
       </CardBody>
@@ -63,7 +67,7 @@ const WalletBriefInfo = () => {
           </div>
           <h2 className="text-xl">
             {formattedCurrency(
-              userData!.moneyInAccount + userData!.moneyInStocks
+              userData.moneyInAccount + userData.moneyInStocks
             )}
           </h2>
         </p>

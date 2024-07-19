@@ -128,7 +128,7 @@ def get_stocks_data(request):
         if stock.get("T") in symbol_name_mapping
     ]
 
-    filtered_stocks.sort(key=lambda x: x["T"])
+    filtered_stocks.sort(key=lambda x: x["stockSymbol"])
 
     return JsonResponse(filtered_stocks, safe=False)
 
@@ -190,25 +190,30 @@ def stock(request):
 
         user.money_in_account -= total_amount
 
-        stock_ownership, created = StockOwnership.objects.get_or_create(
+        stock_ownership = StockOwnership.objects.filter(
             user=user, stock_symbol=stock_symbol
-        )
+        ).first()
 
-        if created:
-            with open("investfree/symbol_name_mapping.csv") as csv_file:
-                csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
-                symbol_name_mapping = {row[0]: row[1] for row in csv_reader}
-                stock_ownership.stock_name = symbol_name_mapping[stock_symbol]
-            stock_ownership.stock_symbol = stock["T"]
-            stock_ownership.quantity = quantity
+        with open("investfree/symbol_name_mapping.csv") as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
+            symbol_name_mapping = {row[0]: row[1] for row in csv_reader}
+            stock_name = symbol_name_mapping[stock_symbol]
+
+        if not stock_ownership:
+            stock_ownership = StockOwnership(
+                user=user,
+                stock_name=stock_name,
+                stock_symbol=stock["T"],
+                quantity=quantity,
+            )
         else:
             stock_ownership.quantity += quantity
 
         transaction = Transaction.objects.create(
             user=user,
             type="buy",
-            stock_symbol=stock_symbol,
-            stock_name=symbol_name_mapping[stock_symbol],
+            stock_symbol=stock["T"],
+            stock_name=stock_name,
             quantity=quantity,
             unit_price=buy_unit_price,
             transaction_price=buy_unit_price * quantity,

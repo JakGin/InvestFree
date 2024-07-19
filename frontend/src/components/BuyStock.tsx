@@ -19,14 +19,17 @@ import {
 import StockInfo from "./StockInfo"
 import useSWR from "swr"
 import { fetcher } from "@/utils/fetcher"
-import { StocksData } from "@/types"
+import { StocksDataT } from "@/types"
 import { getCSRFToken } from "@/utils/tokens"
+import { BuyStockModal } from "./BuyStockModal"
+import { useDisclosure } from "@chakra-ui/react"
 
 const BuyStock = () => {
-  const [stock, setStock] = useState<StocksData | undefined>(undefined)
+  const [stock, setStock] = useState<StocksDataT | undefined>(undefined)
   const [nUnits, setNUnits] = useState("")
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { data, error, isLoading } = useSWR<StocksData[]>(
+  const { data, error, isLoading } = useSWR<StocksDataT[]>(
     "/get_stocks_data",
     fetcher
   )
@@ -44,8 +47,8 @@ const BuyStock = () => {
             "X-CSRFToken": getCSRFToken() || "",
           },
           body: JSON.stringify({
-            stockSymbol: stock?.T,
-            unitPrice: stock?.c,
+            stockSymbol: stock?.stockSymbol,
+            unitPrice: stock?.lastClosePrice,
             quantity: Number(nUnits),
           }),
           credentials: "include",
@@ -53,10 +56,7 @@ const BuyStock = () => {
       )
 
       if (response.ok) {
-        console.log("Stock bought successfully")
-        // TO CHANGE
-        alert(`Buying stock: ${stock?.T} with: ${nUnits} units`)
-        setNUnits("")
+        onOpen()
       } else {
         const error = await response.json()
         console.error("Failed to buy stock", error)
@@ -68,22 +68,34 @@ const BuyStock = () => {
 
   return (
     <div className="flex flex-col gap-8 w-fit self-center">
+      {stock && (
+        <BuyStockModal
+          onOpen={onOpen}
+          onClose={onClose}
+          isOpen={isOpen}
+          stock={stock}
+          quantity={Number(nUnits)}
+          setNUnits={setNUnits}
+        />
+      )}
       <section className="w-[350px]">
         <h1 className="text-2xl font-medium py-2">Search for a Stock</h1>
         <div>
           <Select
             placeholder="Select stock"
-            value={stock?.T}
+            value={stock?.stockSymbol}
             onChange={(e) => {
               const stockSymbol = e.target.value
-              const stock = data?.find((stock) => stock.T === stockSymbol)
+              const stock = data?.find(
+                (stock) => stock.stockSymbol === stockSymbol
+              )
               setStock(stock)
             }}
           >
             {data &&
               data.map((stock) => (
-                <option key={stock.T} value={stock.T}>
-                  {stock.T}
+                <option key={stock.stockSymbol} value={stock.stockSymbol}>
+                  {stock.stockSymbol}
                 </option>
               ))}
           </Select>
@@ -94,11 +106,11 @@ const BuyStock = () => {
         <>
           <div className="self-center w-[350px]">
             <StockInfo
-              stockName={stock.name}
-              stockSymbol={stock.T}
-              price={stock.c}
-              priceChange={stock.todayPriceChange}
-              percentChange={stock.todayPriceChangePercentage}
+              stockName={stock.stockName}
+              stockSymbol={stock.stockSymbol}
+              price={stock.lastClosePrice}
+              priceChange={stock.lastPriceChange}
+              percentChange={stock.lastPriceChangePercentage}
             />
           </div>
 
@@ -110,7 +122,6 @@ const BuyStock = () => {
                 <NumberInput
                   defaultValue={1}
                   min={1}
-                  max={1000000}
                   precision={0}
                   name="units"
                   onChange={(value) => setNUnits(value)}
@@ -130,7 +141,9 @@ const BuyStock = () => {
               {Number(nUnits) > 0 && (
                 <p className="font-medium text-lg">
                   Total cost:{" "}
-                  <span>{formattedCurrency(stock.c * Number(nUnits))}</span>
+                  <span>
+                    {formattedCurrency(stock.lastClosePrice * Number(nUnits))}
+                  </span>
                 </p>
               )}
 

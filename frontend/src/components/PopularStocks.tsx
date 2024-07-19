@@ -3,13 +3,13 @@ import { Stock } from "./Stock"
 import { SimpleGrid } from "@chakra-ui/react"
 import { fetcher } from "@/utils/fetcher"
 import useSWR from "swr"
-import { StocksData } from "@/types"
+import { StocksDataT } from "@/types"
 import { Pagination } from "./Pagination"
 
 const PopularStocks = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsOnPage = 6
-  const { data, error, isLoading } = useSWR<StocksData[]>(
+  const { data, error, isLoading } = useSWR<StocksDataT[]>(
     "/get_stocks_data",
     fetcher
   )
@@ -35,11 +35,11 @@ const PopularStocks = () => {
           .map((stock, index) => (
             <Stock
               key={index}
-              stockName={stock.name}
-              stockSymbol={stock.T}
-              price={stock.c}
-              priceChange={stock.todayPriceChange}
-              percentChange={stock.todayPriceChangePercentage}
+              stockName={stock.stockName}
+              stockSymbol={stock.stockSymbol}
+              price={stock.lastClosePrice}
+              priceChange={stock.lastPriceChange}
+              percentChange={stock.lastPriceChangePercentage}
             />
           ))}
       </SimpleGrid>
