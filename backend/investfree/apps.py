@@ -28,7 +28,7 @@ def fetch_stock_data():
     while True:
         max_days_back = 5
         current_data = None
-        previous_data = None
+        # previous_data = None
         today = datetime.today()
 
         for _ in range(max_days_back):
@@ -41,8 +41,8 @@ def fetch_stock_data():
                 if response.status_code == 200:
                     if current_data is None:
                         current_data = response.json()
-                    else:
-                        previous_data = response.json()
+                    # else:
+                    #     previous_data = response.json()
                 else:
                     print(
                         f"Failed to fetch stock data for {formatted_date}. Status code: {response.status_code}"
@@ -50,20 +50,25 @@ def fetch_stock_data():
             except Exception as e:
                 print(f"An error occurred: {e}")
 
-            # If previous and current data was fetched break
-            if current_data is not None and previous_data is not None:
+            # # If previous and current data was fetched break
+            # if current_data is not None and previous_data is not None:
+            #     break
+
+            if current_data is not None:
                 break
+
             # Go back one day
             today -= timedelta(days=1)
 
-        if current_data is None or previous_data is None:
+        # if current_data is None or previous_data is None:
+        if current_data is None:
             print("Failed to fetch stock data after 5 attempts.")
         else:
             try:
                 with open("investfree/stock_data.json", "w") as json_file:
                     json.dump(current_data, json_file)
-                with open("investfree/stock_data_previous.json", "w") as json_file:
-                    json.dump(previous_data, json_file)
+                # with open("investfree/stock_data_previous.json", "w") as json_file:
+                #     json.dump(previous_data, json_file)
             except Exception as e:
                 print(f"An error occurred: {e}")
             else:

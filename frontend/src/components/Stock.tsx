@@ -106,7 +106,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
       className="flex items-center"
     >
       <CardHeader>
-        <h1>{stock.stockName}</h1>
+        <h1>{stock.stockName} ({stock.stockSymbol})</h1>
         <Text className="flex gap-2 items-center">
           <Stat>
             <StatArrow type={9.99 > 0 ? "increase" : "decrease"} />

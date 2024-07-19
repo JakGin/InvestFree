@@ -4,7 +4,7 @@ import csv
 from datetime import datetime
 
 from django.contrib.auth import authenticate, login, logout, get_user_model
-from django.db import IntegrityError
+from django.db import transaction as db_transaction
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -63,7 +63,6 @@ class UserLogout(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-# TODO the money in stock should be calculated based on the current stock price # not the price when the user bought it
 @login_required
 @require_http_methods(["GET"])
 def get_user(request):
@@ -71,34 +70,33 @@ def get_user(request):
     Get user data including his wallet and stocks.
     """
     user = request.user
-    transactions = Transaction.objects.filter(user=user, sell_date__isnull=True)
-    transactions_list = [
+    stocks_owned = StockOwnership.objects.filter(user=user)
+    stocks_owned_list = [
         {
-            "stock_symbol": transaction.stock_symbol,
-            "stock_name": transaction.stock_name,
-            "quantity": transaction.quantity,
-            "buy_unit_price": transaction.buy_unit_price,
-            "buy_date": transaction.buy_date,
-            "current_benefit": transaction.quantity
-            * (transaction.buy_unit_price - transaction.buy_unit_price),
-            "current_percentage_benefit": (
-                transaction.buy_unit_price - transaction.buy_unit_price
-            )
-            / transaction.buy_unit_price
-            * 100,
+            "stockSymbol": stock.stock_symbol,
+            "stockName": stock.stock_name,
+            "quantity": stock.quantity,
         }
-        for transaction in transactions
+        for stock in stocks_owned
     ]
+
+    with open("investfree/stock_data.json", "r") as json_file:
+        data = json.load(json_file)
+        stocks_from_api: list = data["results"]
+
+    money_in_stocks = 0
+    for stock in stocks_owned_list:
+        for api_stock in stocks_from_api:
+            if api_stock["T"] == stock["stockSymbol"]:
+                money_in_stocks += api_stock["c"] * stock["quantity"]
+                break
 
     user_data = {
         "username": user.username,
         "email": user.email,
-        "money_in_account": user.money_in_account,
-        "money_in_stocks": sum(
-            transaction.quantity * transaction.buy_unit_price
-            for transaction in transactions
-        ),
-        "stocks": transactions_list,
+        "moneyInAccount": user.money_in_account,
+        "moneyInStocks": money_in_stocks,
+        "stocksOwned": stocks_owned_list,
     }
 
     return JsonResponse(user_data)
@@ -114,23 +112,21 @@ def get_stocks_data(request):
     with open("investfree/stock_data.json", "r") as json_file:
         data = json.load(json_file)
         stocks = data["results"]
-    # with open("investfree/stock_data_previous.json", "r") as json_file:
-    #     data = json.load(json_file)
-    #     previous_stocks = data["results"]
 
     with open("investfree/symbol_name_mapping.csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
         symbol_name_mapping = {row[0]: row[1] for row in csv_reader}
     filtered_stocks = [
-        stock for stock in stocks if stock.get("T") in symbol_name_mapping
+        {
+            "stockSymbol": stock["T"],
+            "stockName": symbol_name_mapping[stock["T"]],
+            "lastClosePrice": stock["c"],
+            "lastPriceChange": stock["c"] - stock["o"],
+            "lastPriceChangePercentage": ((stock["c"] - stock["o"]) / stock["o"]) * 100,
+        }
+        for stock in stocks
+        if stock.get("T") in symbol_name_mapping
     ]
-
-    for stock in filtered_stocks:
-        stock["name"] = symbol_name_mapping[stock["T"]]
-        stock["todayPriceChange"] = stock["c"] - stock["o"]
-        stock["todayPriceChangePercentage"] = (
-            stock["todayPriceChange"] / stock["o"]
-        ) * 100
 
     filtered_stocks.sort(key=lambda x: x["T"])
 
@@ -144,7 +140,6 @@ def stock(request):
     - stockSymbol: str
     - unitPrice: float
     - quantity: int > 0
-    -* buyDate: str (only for DELETE method)
     """
     if request.method == "POST":
         data = json.loads(request.body)
@@ -186,61 +181,58 @@ def stock(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if user.money_in_account < buy_unit_price * quantity:
+        total_amount = buy_unit_price * quantity
+        if user.money_in_account < total_amount:
             return JsonResponse(
                 {"error": "You don't have enough money in your account"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        user.money_in_account -= buy_unit_price * quantity
-        user.save()
+        user.money_in_account -= total_amount
+
+        stock_ownership, created = StockOwnership.objects.get_or_create(
+            user=user, stock_symbol=stock_symbol
+        )
+
+        if created:
+            with open("investfree/symbol_name_mapping.csv") as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
+                symbol_name_mapping = {row[0]: row[1] for row in csv_reader}
+                stock_ownership.stock_name = symbol_name_mapping[stock_symbol]
+            stock_ownership.stock_symbol = stock["T"]
+            stock_ownership.quantity = quantity
+        else:
+            stock_ownership.quantity += quantity
 
         transaction = Transaction.objects.create(
             user=user,
+            type="buy",
             stock_symbol=stock_symbol,
-            stock_name=stock_symbol,
+            stock_name=symbol_name_mapping[stock_symbol],
             quantity=quantity,
-            buy_unit_price=buy_unit_price,
+            unit_price=buy_unit_price,
+            transaction_price=buy_unit_price * quantity,
         )
-        transaction.save()
 
-        return JsonResponse(
-            {
-                "stock_symbol": transaction.stock_symbol,
-                "stock_name": transaction.stock_name,
-                "quantity": transaction.quantity,
-                "buy_unit_price": transaction.buy_unit_price,
-                "buy_date": transaction.buy_date,
-            },
-            status=status.HTTP_201_CREATED,
-        )
+        # Make all of db operations atomic
+        with db_transaction.atomic():
+            user.save()
+            stock_ownership.save()
+            transaction.save()
+
+        return JsonResponse({}, status=status.HTTP_201_CREATED)
 
     elif request.method == "DELETE":
         data = json.loads(request.body)
-        user = request.user
         stock_symbol = data["stockSymbol"]
         unit_price = data["unitPrice"]
         quantity = data["quantity"]
-        buy_date = data["buyDate"]
+        user = request.user
 
         if quantity <= 0 or not isinstance(quantity, int):
             return JsonResponse(
                 {"error": "Quantity must be greater than 0"},
                 status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        transaction = Transaction.objects.filter(
-            user=user,
-            stock_symbol=stock_symbol,
-            quantity=quantity,
-            # buy_date=buy_date,
-            sell_date__isnull=True,
-        ).first()
-
-        if transaction is None:
-            return JsonResponse(
-                {"error": "Transaction not found"},
-                status=status.HTTP_404_NOT_FOUND,
             )
 
         try:
@@ -260,10 +252,9 @@ def stock(request):
                 status=status.HTTP_404_NOT_FOUND,
             )
         stock = stock[0]
-        sell_unit_price = stock["c"]
+        real_unit_price = stock["c"]
 
-        # Check if the is not front-back unit price mismatch
-        if sell_unit_price != unit_price:
+        if real_unit_price != unit_price:
             return JsonResponse(
                 {
                     "error": "Requested unit price does not match the current unit price, please refresh the page"
@@ -271,22 +262,36 @@ def stock(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        user.money_in_account += sell_unit_price * quantity
-        user.save()
+        stock_ownership = StockOwnership.objects.get(
+            user=user, stock_symbol=stock_symbol
+        )
 
-        transaction.sell_unit_price = sell_unit_price
-        transaction.sell_date = timezone.now()
-        transaction.save()
+        if stock_ownership.quantity < quantity:
+            return JsonResponse(
+                {"error": "You don't have enough stocks to sell"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        stock_ownership.quantity -= quantity
+        user.money_in_account += real_unit_price * quantity
+
+        transaction = Transaction.objects.create(
+            user=user,
+            type="sell",
+            stock_symbol=stock_symbol,
+            stock_name=stock_ownership.stock_name,
+            quantity=quantity,
+            unit_price=real_unit_price,
+            transaction_price=real_unit_price * quantity,
+        )
+
+        # Make all of db operations atomic
+        with db_transaction.atomic():
+            user.save()
+            stock_ownership.save()
+            transaction.save()
 
         return JsonResponse(
-            {
-                "stock_symbol": transaction.stock_symbol,
-                "stock_name": transaction.stock_name,
-                "quantity": transaction.quantity,
-                "buy_unit_price": transaction.buy_unit_price,
-                "buy_date": transaction.buy_date,
-                "sell_unit_price": transaction.sell_unit_price,
-                "sell_date": transaction.sell_date,
-            },
+            {},
             status=status.HTTP_200_OK,
         )

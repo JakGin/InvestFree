@@ -16,3 +16,7 @@ TODO MVP
 
 - [] DockerFile's
 - [] DockerCompose
+
+# Optimization
+
+- [] On the backend don't write Stocks Info from Api to the file. Intead save it in the variable so that it can be access much fater. Make this data a dictionary that can be searched by stockSymbol.

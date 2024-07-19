@@ -1,38 +1,21 @@
-export type Stock = {
+export type StockT = {
   stockSymbol: string
   stockName: string
-  StockBoughtPrice: number
-  units: number
-  buyDate: string
-  benefit: number
-  benefitPercentage: number
+  quantity: number
 }
 
-export type Wallet = {
-  stocks: Stock[]
-}
-
-export type User = {
-  user: {
-    username: string
-    email: string
-  }
+export type UserT = {
+  username: string
+  email: string
   moneyInAccount: number
   moneyInStocks: number
-  wallet: Wallet
+  stocksOwned: StockT[]
 }
 
-export type StocksData = {
-    name: string
-    todayPriceChange: number
-    todayPriceChangePercentage: number
-    T: string
-    c: number
-    h: number
-    l: number
-    n: number
-    o: number
-    t: string
-    v: number
-    vw: number
+export type StocksDataT = {
+  stockSymbol: string
+  stockName: string
+  lastClosePrice: number
+  lastPriceChange: number
+  lastPriceChangePercentage: number
 }
