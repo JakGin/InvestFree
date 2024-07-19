@@ -1,6 +1,6 @@
 import { StockInWallet } from "@/components/Stock"
 import { useUser } from "@/hooks/useUser"
-import { Heading } from "@chakra-ui/react"
+import { Heading, Text } from "@chakra-ui/react"
 import React from "react"
 
 export default function Wallet() {
@@ -8,12 +8,17 @@ export default function Wallet() {
 
   return (
     <div className="flex flex-col gap-4 max-w-7xl self-center">
-      <Heading textAlign="center">Your Wallet</Heading>
-      {userData?.wallet.stocks.map((stock, index) => (
-        <StockInWallet 
-          key={index}
-          stock={stock}
-        />
+      <Heading textAlign="center">
+        <Text
+          bgGradient="linear-gradient(90deg, rgba(88,196,96,1) 30%, rgba(0,251,255,1) 100%)"
+          bgClip="text"
+          mb={6}
+        >
+          Your Wallet
+        </Text>
+      </Heading>
+      {userData?.stocksOwned.map((stock, index) => (
+        <StockInWallet key={index} stock={stock} />
       ))}
     </div>
   )

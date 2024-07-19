@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react"
+import { Card, CardHeader, CardBody, CardFooter, Text } from "@chakra-ui/react"
 import { Banknote, User, Wallet } from "lucide-react"
 import { formattedCurrency } from "@/utils/currency"
 import { useUser } from "@/hooks/useUser"
@@ -37,12 +37,18 @@ const WalletBriefInfo = () => {
   return (
     <Card className="w-fit self-center">
       <CardHeader>
-        <h2 className="text-center text-3xl font-bold">{userData.username}</h2>
+        <Text
+          className="text-center text-3xl font-bold"
+          bgGradient="linear-gradient(90deg, rgba(88,196,96,1) 30%, rgba(0,251,255,1) 100%)"
+          bgClip="text"
+        >
+          {userData.username}
+        </Text>
       </CardHeader>
       <CardBody className="flex gap-12 lg:gap-16 justify-center">
         <div className="text-center">
           <div className="flex items-center gap-2">
-            <User />
+            <User className="text-green-500" />
             <h2 className="font-bold text-2xl">Account</h2>
           </div>
           <h2 className="text-xl">
@@ -51,7 +57,7 @@ const WalletBriefInfo = () => {
         </div>
         <div className="text-center">
           <div className="flex items-center gap-2">
-            <Wallet />
+            <Wallet className="text-green-500" />
             <h2 className="font-bold text-2xl">Wallet</h2>
           </div>
           <h2 className="text-xl">
@@ -62,7 +68,7 @@ const WalletBriefInfo = () => {
       <CardFooter className="self-center">
         <p className="text-center">
           <div className="flex items-center gap-2">
-            <Banknote />
+            <Banknote className="text-green-500" />
             <h2 className="font-bold text-2xl">Total</h2>
           </div>
           <h2 className="text-xl">

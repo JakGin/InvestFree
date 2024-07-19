@@ -7,6 +7,7 @@ import {
   Input,
   Select,
   Button,
+  Text,
 } from "@chakra-ui/react"
 import { formattedCurrency, formattedPercent } from "@/utils/currency"
 import {
@@ -17,7 +18,7 @@ import {
   NumberDecrementStepper,
 } from "@chakra-ui/react"
 import StockInfo from "./StockInfo"
-import useSWR from "swr"
+import useSWR, { mutate } from "swr"
 import { fetcher } from "@/utils/fetcher"
 import { StocksDataT } from "@/types"
 import { getCSRFToken } from "@/utils/tokens"
@@ -57,6 +58,7 @@ const BuyStock = () => {
 
       if (response.ok) {
         onOpen()
+        mutate("/user")
       } else {
         const error = await response.json()
         console.error("Failed to buy stock", error)
@@ -79,7 +81,13 @@ const BuyStock = () => {
         />
       )}
       <section className="w-[350px]">
-        <h1 className="text-2xl font-medium py-2">Search for a Stock</h1>
+        <Text
+          className="text-3xl font-bold py-4 text-center"
+          bgGradient="linear-gradient(90deg, rgba(88,196,96,1) 30%, rgba(0,251,255,1) 100%)"
+          bgClip="text"
+        >
+          Search for a Stock
+        </Text>
         <div>
           <Select
             placeholder="Select stock"
@@ -115,7 +123,13 @@ const BuyStock = () => {
           </div>
 
           <section className="flex flex-col">
-            <h1 className="text-2xl font-medium py-2">Order Units</h1>
+            <Text
+              className="text-3xl font-bold py-4 text-center"
+              bgGradient="linear-gradient(90deg, rgba(88,196,96,1) 30%, rgba(0,251,255,1) 100%)"
+              bgClip="text"
+            >
+              Order Units
+            </Text>
             <form className="flex flex-col gap-4" onSubmit={handleBuy}>
               <FormControl isRequired>
                 <FormLabel>Enter number of units to buy</FormLabel>

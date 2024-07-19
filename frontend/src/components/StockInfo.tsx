@@ -27,10 +27,16 @@ const StockInfo = ({
 }) => {
   return (
     <section>
-      <h1 className="text-2xl font-medium py-2">Stock Information</h1>
+      <Text
+        className="text-3xl font-bold py-4 text-center"
+        bgGradient="linear-gradient(90deg, rgba(88,196,96,1) 30%, rgba(0,251,255,1) 100%)"
+        bgClip="text"
+      >
+        Stock Information
+      </Text>
       <Card>
         <CardHeader>
-          <Heading size="md">
+          <Heading size="md" textAlign="center">
             {stockSymbol}, {stockName}
           </Heading>
         </CardHeader>
@@ -58,8 +64,9 @@ const StockInfo = ({
           <Link
             href={`https://finance.yahoo.com/quote/${stockSymbol}/`}
             isExternal
+            width="100%"
           >
-            <Text className="underline">Check on Yahoo Finance</Text>
+            <Text className="underline text-center opacity-50">Check on Yahoo Finance</Text>
           </Link>
         </CardFooter>
       </Card>

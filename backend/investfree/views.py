@@ -230,7 +230,6 @@ def stock(request):
     elif request.method == "DELETE":
         data = json.loads(request.body)
         stock_symbol = data["stockSymbol"]
-        unit_price = data["unitPrice"]
         quantity = data["quantity"]
         user = request.user
 
@@ -259,13 +258,14 @@ def stock(request):
         stock = stock[0]
         real_unit_price = stock["c"]
 
-        if real_unit_price != unit_price:
-            return JsonResponse(
-                {
-                    "error": "Requested unit price does not match the current unit price, please refresh the page"
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        # # For now don't check the unit_price for mismatch
+        # if real_unit_price != unit_price:
+        #     return JsonResponse(
+        #         {
+        #             "error": "Requested unit price does not match the current unit price, please refresh the page"
+        #         },
+        #         status=status.HTTP_400_BAD_REQUEST,
+        #     )
 
         stock_ownership = StockOwnership.objects.get(
             user=user, stock_symbol=stock_symbol
@@ -293,7 +293,10 @@ def stock(request):
         # Make all of db operations atomic
         with db_transaction.atomic():
             user.save()
-            stock_ownership.save()
+            if stock_ownership.quantity == 0:
+                stock_ownership.delete()
+            else:
+                stock_ownership.save()
             transaction.save()
 
         return JsonResponse(

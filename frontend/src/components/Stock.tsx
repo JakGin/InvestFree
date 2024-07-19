@@ -12,7 +12,7 @@ import {
   Stat,
 } from "@chakra-ui/react"
 import { formattedPercent, formattedCurrency } from "@/utils/currency"
-import { Stock as StockT } from "@/types"
+import { StockT } from "@/types"
 import { getCSRFToken } from "@/utils/tokens"
 import { mutate } from "swr"
 
@@ -36,12 +36,12 @@ export function Stock({
           {stockSymbol}, {stockName}
         </Heading>
       </CardHeader>
-      <CardBody className="flex flex-col gap-2 justify-between">
-        <Text className="text-center">
+      <CardBody className="flex flex-col gap-4 justify-between">
+        <Text className="text-center font-medium text-xl">
           Price for unit
           <div className="text-lg font-medium">{formattedCurrency(price)}</div>
         </Text>
-        <Text className="flex flex-col items-center">
+        <Text className="flex flex-col items-center text-xl font-medium">
           Last day change
           <div className="text-lg font-medium flex items-center gap-1">
             <Stat>
@@ -59,7 +59,7 @@ export function Stock({
           href={`https://finance.yahoo.com/quote/${stockSymbol}/`}
           isExternal
         >
-          <Text className="underline">Check on Yahoo Finance</Text>
+          <Text className="underline opacity-50">Check on Yahoo Finance</Text>
         </Link>
       </CardFooter>
     </Card>
@@ -80,9 +80,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
           },
           body: JSON.stringify({
             stockSymbol: stock.stockSymbol,
-            unitPrice: stock.StockBoughtPrice,
-            quantity: Number(stock.units),
-            buyDate: stock.buyDate,
+            quantity: Number(stock.quantity),
           }),
           credentials: "include",
         }
@@ -107,20 +105,9 @@ export function StockInWallet({ stock }: { stock: StockT }) {
     >
       <CardHeader>
         <h1>{stock.stockName} ({stock.stockSymbol})</h1>
-        <Text className="flex gap-2 items-center">
-          <Stat>
-            <StatArrow type={9.99 > 0 ? "increase" : "decrease"} />
-          </Stat>
-          {9.99} ({formattedPercent(9.99)})
-        </Text>
       </CardHeader>
       <CardBody>
-        <p>Current Price: $999.99</p>
-        <p>Units: {stock.units}</p>
-        <p>Buy date: {stock.buyDate}</p>
-        <p>Stock Bought unit Price: {stock.StockBoughtPrice}</p>
-        <p>Benefit: $99.99</p>
-        <p>Benefit Percentage: 99%</p>
+        <p>Shares: {stock.quantity}</p>
       </CardBody>
       <CardFooter>
         <form onSubmit={handleSell}>

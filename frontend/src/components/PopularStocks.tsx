@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Stock } from "./Stock"
-import { SimpleGrid } from "@chakra-ui/react"
+import { SimpleGrid, Text } from "@chakra-ui/react"
 import { fetcher } from "@/utils/fetcher"
 import useSWR from "swr"
 import { StocksDataT } from "@/types"
@@ -24,7 +24,13 @@ const PopularStocks = () => {
 
   return (
     <div className="w-full">
-      <h1 className="text-2xl font-medium py-4 text-center">Popular Stocks</h1>
+      <Text
+        className="text-3xl font-bold py-8 text-center"
+        bgGradient="linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(88,196,96,1) 29%, rgba(0,246,255,1) 100%);"
+        bgClip="text"
+      >
+        Popular Stocks
+      </Text>
       <SimpleGrid
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(320px, 1fr))"
