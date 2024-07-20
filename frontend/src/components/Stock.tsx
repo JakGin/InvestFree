@@ -12,9 +12,17 @@ import {
   Stat,
 } from "@chakra-ui/react"
 import { formattedPercent, formattedCurrency } from "@/utils/currency"
-import { StockT } from "@/types"
+import { StocksDataT, StockT } from "@/types"
 import { getCSRFToken } from "@/utils/tokens"
-import { mutate } from "swr"
+import useSWR, { mutate } from "swr"
+import { fetcher } from "@/utils/fetcher"
+import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+} from "@chakra-ui/react"
 
 export function Stock({
   stockName,
@@ -80,7 +88,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
           },
           body: JSON.stringify({
             stockSymbol: stock.stockSymbol,
-            quantity: Number(stock.quantity),
+            quantity: stock.quantity,
           }),
           credentials: "include",
         }
@@ -104,12 +112,33 @@ export function StockInWallet({ stock }: { stock: StockT }) {
       className="flex items-center"
     >
       <CardHeader>
-        <h1>{stock.stockName} ({stock.stockSymbol})</h1>
+        <h1 className="font-semibold text-lg">
+          {stock.stockName} ({stock.stockSymbol})
+        </h1>
+        <Stat>
+          <div className="flex items-center gap-1">
+            <StatArrow
+              type={stock.lastPriceChange > 0 ? "increase" : "decrease"}
+            />
+            <Text>
+              {formattedCurrency(stock.lastPriceChange)} (
+              {formattedPercent(stock.lastPriceChangePercentage)})
+            </Text>
+          </div>
+        </Stat>
+        <Link
+          href={`https://finance.yahoo.com/quote/${stock.stockSymbol}/`}
+          isExternal
+        >
+          <Text className="underline opacity-50 text-sm pt-2">
+            Check on Yahoo Finance
+          </Text>
+        </Link>
       </CardHeader>
-      <CardBody>
-        <p>Shares: {stock.quantity}</p>
-      </CardBody>
-      <CardFooter>
+      <CardBody></CardBody>
+      <CardFooter className="flex flex-col">
+        <Text>Shares: {stock.quantity}</Text>
+        <Text>Profit: {formattedCurrency(stock.profit)}</Text>
         <form onSubmit={handleSell}>
           <Button type="submit" colorScheme="red">
             SELL

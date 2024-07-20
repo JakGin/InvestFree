@@ -1,7 +1,14 @@
-export type StockT = {
+export type StocksDataT = {
   stockSymbol: string
   stockName: string
+  lastClosePrice: number
+  lastPriceChange: number
+  lastPriceChangePercentage: number
+}
+
+export type StockT = StocksDataT & {
   quantity: number
+  profit: number
 }
 
 export type UserT = {
@@ -10,12 +17,4 @@ export type UserT = {
   moneyInAccount: number
   moneyInStocks: number
   stocksOwned: StockT[]
-}
-
-export type StocksDataT = {
-  stockSymbol: string
-  stockName: string
-  lastClosePrice: number
-  lastPriceChange: number
-  lastPriceChangePercentage: number
 }

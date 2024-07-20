@@ -1,5 +1,13 @@
 import React from "react"
-import { Card, CardHeader, CardBody, CardFooter, Text } from "@chakra-ui/react"
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Text,
+  Stat,
+  StatArrow,
+} from "@chakra-ui/react"
 import { Banknote, User, Wallet } from "lucide-react"
 import { formattedCurrency } from "@/utils/currency"
 import { useUser } from "@/hooks/useUser"
@@ -33,6 +41,8 @@ const WalletBriefInfo = () => {
   if (!userData) {
     return <div></div>
   }
+
+  const total = userData.moneyInAccount + userData.moneyInStocks
 
   return (
     <Card className="w-fit self-center">
@@ -71,11 +81,17 @@ const WalletBriefInfo = () => {
             <Banknote className="text-green-500" />
             <h2 className="font-bold text-2xl">Total</h2>
           </div>
-          <h2 className="text-xl">
-            {formattedCurrency(
-              userData.moneyInAccount + userData.moneyInStocks
-            )}
-          </h2>
+          <h2 className="text-xl">{formattedCurrency(total)}</h2>
+          <Stat>
+            <div className="flex items-center justify-center">
+              <StatArrow type={total > 1000000 ? "increase" : "decrease"} />
+              <Text
+                className={total > 1000000 ? "text-green-500" : "text-red-500"}
+              >
+                {formattedCurrency(total - 1000000)}
+              </Text>
+            </div>
+          </Stat>
         </p>
       </CardFooter>
     </Card>

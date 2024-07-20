@@ -8,7 +8,6 @@ urlpatterns = [
     path("logout/", views.UserLogout.as_view(), name="logout"),
     path("user/", views.get_user, name="user"),
     path("get_stocks_data/", views.get_stocks_data, name="get_stocks_data"),
-    # Needed paths
     # transaction POST DELETE
     path("stock/", views.stock, name="stock"),
 ]

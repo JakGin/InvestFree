@@ -6,6 +6,10 @@ import React from "react"
 export default function Wallet() {
   const { userData, userError, userIsLoading } = useUser()
 
+  if (userIsLoading) return <div>Loading...</div>
+  if (userError) return <div>Error loading user data</div>
+  if (!userData) return <div>No user data</div>
+
   return (
     <div className="flex flex-col gap-4 max-w-7xl self-center">
       <Heading textAlign="center">
@@ -17,7 +21,7 @@ export default function Wallet() {
           Your Wallet
         </Text>
       </Heading>
-      {userData?.stocksOwned.map((stock, index) => (
+      {userData.stocksOwned.map((stock, index) => (
         <StockInWallet key={index} stock={stock} />
       ))}
     </div>
