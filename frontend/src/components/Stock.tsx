@@ -10,6 +10,14 @@ import {
   Link,
   StatArrow,
   Stat,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  FormControl,
+  FormLabel,
+  FormHelperText,
 } from "@chakra-ui/react"
 import { formattedPercent, formattedCurrency } from "@/utils/currency"
 import { StocksDataT, StockT } from "@/types"
@@ -75,8 +83,12 @@ export function Stock({
 }
 
 export function StockInWallet({ stock }: { stock: StockT }) {
+  const [unitsToSell, setUnitsToSell] = React.useState(0)
+  const [isSelling, setIsSelling] = React.useState(false)
+
   async function handleSell(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setIsSelling(true)
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/stock/`,
@@ -88,7 +100,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
           },
           body: JSON.stringify({
             stockSymbol: stock.stockSymbol,
-            quantity: stock.quantity,
+            quantity: unitsToSell,
           }),
           credentials: "include",
         }
@@ -104,6 +116,9 @@ export function StockInWallet({ stock }: { stock: StockT }) {
     } catch (error) {
       console.error("Failed to sell stock", error)
     }
+
+    setIsSelling(false)
+    setUnitsToSell(0)
   }
 
   return (
@@ -136,11 +151,33 @@ export function StockInWallet({ stock }: { stock: StockT }) {
         </Link>
       </CardHeader>
       <CardBody></CardBody>
-      <CardFooter className="flex flex-col">
+      <CardFooter className="flex flex-col lg:flex-row">
         <Text>Shares: {stock.quantity}</Text>
         <Text>Profit: {formattedCurrency(stock.profit)}</Text>
-        <form onSubmit={handleSell}>
-          <Button type="submit" colorScheme="red">
+        <form onSubmit={handleSell} className="flex flex-col gap-2">
+          <FormControl>
+            <NumberInput
+              size="md"
+              maxW={32}
+              max={stock.quantity}
+              keepWithinRange={false}
+              clampValueOnBlur={false}
+              value={unitsToSell}
+              onChange={(value) => setUnitsToSell(Number(value))}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <FormHelperText>Number of units to sell</FormHelperText>
+          </FormControl>
+          <Button
+            type="submit"
+            colorScheme="red"
+            isDisabled={isSelling ? true : false}
+          >
             SELL
           </Button>
         </form>

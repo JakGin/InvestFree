@@ -10,7 +10,7 @@ TODO MVP
   - [x] N of shares
   - [x] Current Change
   - [x] Current benefit/loss on this stock with the currently owned shares
-  - [] N of units to sell
+  - [x] N of units to sell
   - [] Sell consent
 
 - [] Top players
@@ -33,5 +33,6 @@ TODO MVP
 
 # Optimization
 
+- [] Frontend should only sent as much requests to the server as really needed. When we know some action was successful on the server via the Response like selling some number of stocks, we shouldn't fetch data again if we can simply update the state via subtracting the deleted stocks from total. To detect it interact with page and check the backend logs.
 - [] On the backend don't write Stocks Info from Api to the file. Intead save it in the variable so that it can be access much fater. Make this data a dictionary that can be searched by stockSymbol.
 - [] Some components on the frontend have to many not needed info/data, it's memory consuming especially when we add more stocks to trade.
