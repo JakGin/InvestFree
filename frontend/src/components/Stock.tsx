@@ -101,6 +101,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
           body: JSON.stringify({
             stockSymbol: stock.stockSymbol,
             quantity: unitsToSell,
+            unitPrice: stock.lastClosePrice,
           }),
           credentials: "include",
         }
@@ -126,7 +127,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
       direction={{ base: "column", sm: "row" }}
       className="flex items-center"
     >
-      <CardHeader>
+      <CardBody>
         <h1 className="font-semibold text-lg">
           {stock.stockName} ({stock.stockSymbol})
         </h1>
@@ -149,38 +150,50 @@ export function StockInWallet({ stock }: { stock: StockT }) {
             Check on Yahoo Finance
           </Text>
         </Link>
-      </CardHeader>
-      <CardBody></CardBody>
-      <CardFooter className="flex flex-col lg:flex-row">
-        <Text>Shares: {stock.quantity}</Text>
-        <Text>Profit: {formattedCurrency(stock.profit)}</Text>
-        <form onSubmit={handleSell} className="flex flex-col gap-2">
-          <FormControl>
-            <NumberInput
-              size="md"
-              maxW={32}
-              max={stock.quantity}
-              keepWithinRange={false}
-              clampValueOnBlur={false}
-              value={unitsToSell}
-              onChange={(value) => setUnitsToSell(Number(value))}
+      </CardBody>
+      <CardFooter>
+        <div className="flex flex-col md:flex-row gap-2 md:gap-12 md:items-center">
+          <div>
+            <Text>
+              Shares: <span>{stock.quantity}</span>
+            </Text>
+            <Text>
+              Profit:{" "}
+              <span
+                className={stock.profit >= 0 ? "text-green-500" : "text-red-500"}
+              >
+                {formattedCurrency(stock.profit)}
+              </span>
+            </Text>
+          </div>
+          <form onSubmit={handleSell} className="flex flex-col gap-2">
+            <FormControl>
+              <NumberInput
+                size="md"
+                maxW={32}
+                max={stock.quantity}
+                keepWithinRange={false}
+                clampValueOnBlur={false}
+                value={unitsToSell}
+                onChange={(value) => setUnitsToSell(Number(value))}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              <FormHelperText>Number of units to sell</FormHelperText>
+            </FormControl>
+            <Button
+              type="submit"
+              colorScheme="red"
+              isDisabled={isSelling ? true : false}
             >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-            <FormHelperText>Number of units to sell</FormHelperText>
-          </FormControl>
-          <Button
-            type="submit"
-            colorScheme="red"
-            isDisabled={isSelling ? true : false}
-          >
-            SELL
-          </Button>
-        </form>
+              SELL
+            </Button>
+          </form>
+        </div>
       </CardFooter>
     </Card>
   )
