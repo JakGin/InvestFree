@@ -3,20 +3,18 @@ TODO MVP
 # Main objective
 
 - [x] on Dashboard display how up or down in Total person is
-- [] Wallet Stock UI + backend
-  Info to show BASE:
+- [x] Wallet Stock UI + backend
+      Info to show BASE:
 
   - [x] Name + Symbol
   - [x] N of shares
   - [x] Current Change
   - [x] Current benefit/loss on this stock with the currently owned shares
   - [x] N of units to sell
-  - [] Sell consent
+  - [x] Empty Wallet view
+  - [x] Sell feedback
 
-- [] Top players
-
-  - [] player name
-  - [] overall sum (wallet + account)
+- [x] Top Players
 
 - [] Account
 
@@ -24,12 +22,19 @@ TODO MVP
   - [] Change email
   - [] Change password
 
-- [] Paggination in Wallet page
+- [] Change database from Sqlite to Postgresql
 
 # DevOps
 
 - [] DockerFile's
 - [] DockerCompose
+- [] Deployment (Vercel, AWS, etc...)
+
+# Next Features
+
+- [] Transaction History Page (last 100 transactions)
+
+- [] Paggination in Wallet page
 
 # Optimization
 

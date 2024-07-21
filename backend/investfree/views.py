@@ -284,3 +284,47 @@ def stock(request):
             {},
             status=status.HTTP_200_OK,
         )
+
+
+def user_stocks_money(user: User) -> float:
+    """
+    Get the total money in stocks for a user.
+    """
+    with open("investfree/stock_data.json", "r") as json_file:
+        stock_data = json.load(json_file)
+        api_stocks = stock_data["results"]
+
+    stocks = StockOwnership.objects.filter(user=user)
+    money_in_stocks = 0
+    for stock in stocks:
+        stock_price = next(
+            (
+                api_stock["c"]
+                for api_stock in api_stocks
+                if api_stock["T"] == stock.stock_symbol
+            ),
+        )
+        money_in_stocks += stock.quantity * stock_price
+    return money_in_stocks
+
+
+@require_http_methods(["GET"])
+def best_players(request):
+    """
+    Get the best players in the game.
+    """
+    users = User.objects.filter(is_superuser=False)
+    best_players = [
+        {
+            "username": user.username,
+            "dateJoined": user.date_joined,
+            "numberOfStocks": len(StockOwnership.objects.filter(user=user)),
+            "total": user_stocks_money(user) + user.money_in_account,
+        }
+        for i, user in enumerate(users)
+    ]
+    best_players.sort(key=lambda x: x["total"], reverse=True)
+    for i, player in enumerate(best_players):
+        player["placement"] = i + 1
+
+    return JsonResponse(best_players, safe=False)

@@ -16,21 +16,14 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   FormControl,
-  FormLabel,
   FormHelperText,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { formattedPercent, formattedCurrency } from "@/utils/currency"
-import { StocksDataT, StockT } from "@/types"
+import { StockT } from "@/types"
 import { getCSRFToken } from "@/utils/tokens"
-import useSWR, { mutate } from "swr"
-import { fetcher } from "@/utils/fetcher"
-import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-} from "@chakra-ui/react"
+import { mutate } from "swr"
+import { SellStock } from "./SellStock"
 
 export function Stock({
   stockName,
@@ -53,11 +46,11 @@ export function Stock({
         </Heading>
       </CardHeader>
       <CardBody className="flex flex-col gap-4 justify-between">
-        <Text className="text-center font-medium text-xl">
+        <div className="text-center font-medium text-xl">
           Price for unit
           <div className="text-lg font-medium">{formattedCurrency(price)}</div>
-        </Text>
-        <Text className="flex flex-col items-center text-xl font-medium">
+        </div>
+        <div className="flex flex-col items-center text-xl font-medium">
           Last day change
           <div className="text-lg font-medium flex items-center gap-1">
             <Stat>
@@ -68,9 +61,9 @@ export function Stock({
               {formattedPercent(percentChange)})
             </Text>
           </div>
-        </Text>
+        </div>
       </CardBody>
-      <CardFooter className="flex self-center">
+      <CardFooter>
         <Link
           href={`https://finance.yahoo.com/quote/${stockSymbol}/`}
           isExternal
@@ -85,6 +78,7 @@ export function Stock({
 export function StockInWallet({ stock }: { stock: StockT }) {
   const [unitsToSell, setUnitsToSell] = React.useState(0)
   const [isSelling, setIsSelling] = React.useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   async function handleSell(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -109,6 +103,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
 
       if (response.ok) {
         console.log("Stock sold successfully")
+        onOpen()
         mutate("/user")
       } else {
         const error = await response.json()
@@ -119,7 +114,6 @@ export function StockInWallet({ stock }: { stock: StockT }) {
     }
 
     setIsSelling(false)
-    setUnitsToSell(0)
   }
 
   return (
@@ -127,6 +121,13 @@ export function StockInWallet({ stock }: { stock: StockT }) {
       direction={{ base: "column", sm: "row" }}
       className="flex items-center"
     >
+      <SellStock
+        isOpen={isOpen}
+        onClose={onClose}
+        stockSymbol={stock.stockSymbol}
+        quantity={unitsToSell}
+        setUnitsToSell={setUnitsToSell}
+      />
       <CardBody>
         <h1 className="font-semibold text-lg">
           {stock.stockName} ({stock.stockSymbol})
@@ -145,6 +146,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
         <Link
           href={`https://finance.yahoo.com/quote/${stock.stockSymbol}/`}
           isExternal
+          className="inline-block"
         >
           <Text className="underline opacity-50 text-sm pt-2">
             Check on Yahoo Finance
@@ -160,7 +162,9 @@ export function StockInWallet({ stock }: { stock: StockT }) {
             <Text>
               Profit:{" "}
               <span
-                className={stock.profit >= 0 ? "text-green-500" : "text-red-500"}
+                className={
+                  stock.profit >= 0 ? "text-green-500" : "text-red-500"
+                }
               >
                 {formattedCurrency(stock.profit)}
               </span>
@@ -188,7 +192,7 @@ export function StockInWallet({ stock }: { stock: StockT }) {
             <Button
               type="submit"
               colorScheme="red"
-              isDisabled={isSelling ? true : false}
+              isDisabled={isSelling || unitsToSell === 0 ? true : false}
             >
               SELL
             </Button>

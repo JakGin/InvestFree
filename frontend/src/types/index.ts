@@ -18,3 +18,11 @@ export type UserT = {
   moneyInStocks: number
   stocksOwned: StockT[]
 }
+
+export type BestInvestorT = {
+  placement: number
+  username: string
+  dateJoined: string
+  numberOfStocks: number
+  total: number
+}

@@ -76,7 +76,7 @@ const WalletBriefInfo = () => {
         </div>
       </CardBody>
       <CardFooter className="self-center">
-        <p className="text-center">
+        <div className="text-center">
           <div className="flex items-center gap-2">
             <Banknote className="text-green-500" />
             <h2 className="font-bold text-2xl">Total</h2>
@@ -84,15 +84,15 @@ const WalletBriefInfo = () => {
           <h2 className="text-xl">{formattedCurrency(total)}</h2>
           <Stat>
             <div className="flex items-center justify-center">
-              <StatArrow type={total > 1000000 ? "increase" : "decrease"} />
+              <StatArrow type={total >= 1000000 ? "increase" : "decrease"} />
               <Text
-                className={total > 1000000 ? "text-green-500" : "text-red-500"}
+                className={total >= 1000000 ? "text-green-500" : "text-red-500"}
               >
                 {formattedCurrency(total - 1000000)}
               </Text>
             </div>
           </Stat>
-        </p>
+        </div>
       </CardFooter>
     </Card>
   )

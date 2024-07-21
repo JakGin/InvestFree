@@ -119,6 +119,9 @@ input {
   display: flex;
   flex-direction: column;
   padding: 0.5em;
+  align-items: start;
+  max-width: 450px;
+  margin: 0 auto;
 }
 
 .Register--constraint {
