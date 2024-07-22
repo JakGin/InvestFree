@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 
 from .user import get_user_stocks
 from .validations import username_valid, email_valid, password_valid
+from .utils import GlobalState
 
 
 class UserRegister(APIView):
@@ -91,25 +92,21 @@ def get_stocks_data(request):
     This file is fetched from the Polygon API every 24 hours.
     """
     with open("investfree/stock_data.json", "r") as json_file:
-        data = json.load(json_file)
-        stocks = data["results"]
+        stocks = json.load(json_file)
 
-    with open("investfree/symbol_name_mapping.csv") as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
-        symbol_name_mapping = {row[0]: row[1] for row in csv_reader}
     filtered_stocks = [
         {
-            "stockSymbol": stock["T"],
-            "stockName": symbol_name_mapping[stock["T"]],
-            "lastClosePrice": stock["c"],
-            "lastPriceChange": stock["c"] - stock["o"],
-            "lastPriceChangePercentage": ((stock["c"] - stock["o"]) / stock["o"]) * 100,
+            "stockSymbol": stock_symbol,
+            "stockName": stock["name"],
+            "lastClosePrice": stock["close_price"],
+            "lastPriceChange": stock["close_price"] - stock["open_price"],
+            "lastPriceChangePercentage": (
+                (stock["close_price"] - stock["open_price"]) / stock["open_price"]
+            )
+            * 100,
         }
-        for stock in stocks
-        if stock.get("T") in symbol_name_mapping
+        for stock_symbol, stock in stocks.items()
     ]
-
-    filtered_stocks.sort(key=lambda x: x["stockSymbol"])
 
     return JsonResponse(filtered_stocks, safe=False)
 
@@ -137,24 +134,16 @@ def stock(request):
 
         try:
             with open("investfree/stock_data.json", "r") as json_file:
-                stock_data = json.load(json_file)
+                stocks = json.load(json_file)
         except FileNotFoundError:
             return JsonResponse(
                 {"error": "There was an error on the server"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        stocks = stock_data["results"]
-        stock = [stock for stock in stocks if stock.get("T") == stock_symbol]
-        if len(stock) == 0:
-            return JsonResponse(
-                {"error": f"Stock with symbol {stock_symbol} not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        stock = stock[0]
-        buy_unit_price = stock["c"]
+        stock = stocks[stock_symbol]
 
-        if buy_unit_price != unit_price:
+        if stock["close_price"] != unit_price:
             return JsonResponse(
                 {
                     "error": "Requested unit price does not match the current unit price, please refresh the page"
@@ -162,7 +151,7 @@ def stock(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        total_amount = buy_unit_price * quantity
+        total_amount = stock["close_price"] * quantity
         if user.money_in_account < total_amount:
             return JsonResponse(
                 {"error": "You don't have enough money in your account"},
@@ -175,25 +164,20 @@ def stock(request):
             user=user, stock_symbol=stock_symbol
         ).first()
 
-        with open("investfree/symbol_name_mapping.csv") as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=",", quotechar='"')
-            symbol_name_mapping = {row[0]: row[1] for row in csv_reader}
-            stock_name = symbol_name_mapping[stock_symbol]
-
         if not stock_ownership:
             stock_ownership = StockOwnership(
                 user=user,
-                stock_name=stock_name,
-                stock_symbol=stock["T"],
+                stock_name=stock["name"],
+                stock_symbol=stock_symbol,
                 quantity=quantity,
-                last_unit_price=buy_unit_price,
+                last_unit_price=stock["close_price"],
             )
         else:
             # Update profit
             stock_ownership.profit += stock_ownership.quantity * (
-                buy_unit_price - stock_ownership.last_unit_price
+                stock["close_price"] - stock_ownership.last_unit_price
             )
-            stock_ownership.last_unit_price = buy_unit_price
+            stock_ownership.last_unit_price = stock["close_price"]
 
             stock_ownership.quantity += quantity
 
@@ -230,25 +214,17 @@ def stock(request):
 
         try:
             with open("investfree/stock_data.json", "r") as json_file:
-                stock_data = json.load(json_file)
+                stocks = json.load(json_file)
         except FileNotFoundError:
             return JsonResponse(
                 {"error": "There was an error on the server"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        stocks = stock_data["results"]
-        stock = [stock for stock in stocks if stock.get("T") == stock_symbol]
-        if len(stock) == 0:
-            return JsonResponse(
-                {"error": f"Stock with symbol {stock_symbol} not found"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        stock = stock[0]
-        real_unit_price = stock["c"]
+        stock = stocks[stock_symbol]
 
         # For now don't check the unit_price for mismatch
-        if real_unit_price != unit_price:
+        if stock["close_price"] != unit_price:
             return JsonResponse(
                 {
                     "error": "Requested unit price does not match the current unit price, please refresh the page"
@@ -268,13 +244,13 @@ def stock(request):
 
         # Update profit
         stock_ownership.profit += stock_ownership.quantity * (
-            real_unit_price - stock_ownership.last_unit_price
+            stock["close_price"] - stock_ownership.last_unit_price
         )
-        stock_ownership.last_unit_price = real_unit_price
+        stock_ownership.last_unit_price = stock["close_price"]
         stock_ownership.profit *= 1 - (quantity / stock_ownership.quantity)
 
         stock_ownership.quantity -= quantity
-        user.money_in_account += real_unit_price * quantity
+        user.money_in_account += stock["close_price"] * quantity
 
         # transaction = Transaction.objects.create(
         #     user=user,
@@ -306,19 +282,12 @@ def user_stocks_money(user: User) -> float:
     Get the total money in stocks for a user.
     """
     with open("investfree/stock_data.json", "r") as json_file:
-        stock_data = json.load(json_file)
-        api_stocks = stock_data["results"]
+        api_stocks = json.load(json_file)
 
     stocks = StockOwnership.objects.filter(user=user)
     money_in_stocks = 0
     for stock in stocks:
-        stock_price = next(
-            (
-                api_stock["c"]
-                for api_stock in api_stocks
-                if api_stock["T"] == stock.stock_symbol
-            ),
-        )
+        stock_price = api_stocks[stock.stock_symbol]["close_price"]
         money_in_stocks += stock.quantity * stock_price
     return money_in_stocks
 

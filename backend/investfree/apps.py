@@ -1,15 +1,17 @@
 import threading
-import time
 import json
+import time
 import os
+import csv
+import requests
 
 from datetime import datetime, timedelta
-
-import requests
 
 from django.apps import AppConfig
 from django.conf import settings
 from dotenv import load_dotenv
+
+from .utils import GlobalState
 
 
 load_dotenv()
@@ -28,7 +30,6 @@ def fetch_stock_data():
     while True:
         max_days_back = 5
         current_data = None
-        # previous_data = None
         today = datetime.today()
 
         for _ in range(max_days_back):
@@ -46,18 +47,12 @@ def fetch_stock_data():
                                 f"No stock data available for {formatted_date}. Trying previous day."
                             )
                             current_data = None
-                    # else:
-                    #     previous_data = response.json()
                 else:
                     print(
                         f"Failed to fetch stock data for {formatted_date}. Status code: {response.status_code}"
                     )
             except Exception as e:
                 print(f"An error occurred: {e}")
-
-            # # If previous and current data was fetched break
-            # if current_data is not None and previous_data is not None:
-            #     break
 
             if current_data is not None:
                 break
@@ -69,18 +64,36 @@ def fetch_stock_data():
         if current_data is None:
             print("Failed to fetch stock data after 5 attempts.")
         else:
+            stocks = current_data["results"]
+
+            with open("investfree/symbol_name_mapping.csv") as csv_file:
+                reader = csv.reader(csv_file)
+                symbol_name_mapping = {row[0]: row[1] for row in reader}
+                api_stocks = {
+                    stock["T"]: {
+                        "name": symbol_name_mapping[stock["T"]],
+                        "close_price": stock["c"],
+                        "open_price": stock["o"],
+                        "high": stock["h"],
+                        "low": stock["l"],
+                        "timestamp": stock["t"],
+                    }
+                    for stock in stocks
+                    if stock["T"] in symbol_name_mapping
+                }
+
+                sorted_api_stocks = {key: api_stocks[key] for key in sorted(api_stocks)}
+
             try:
                 with open("investfree/stock_data.json", "w") as json_file:
-                    json.dump(current_data, json_file)
-                # with open("investfree/stock_data_previous.json", "w") as json_file:
-                #     json.dump(previous_data, json_file)
+                    json.dump(sorted_api_stocks, json_file)
             except Exception as e:
                 print(f"An error occurred: {e}")
             else:
                 print("Successfully fetched stock data.")
 
         # Wait for 24 hours (86400 seconds)
-        time.sleep(86400)
+        time.sleep(86400 / 4)
 
 
 class InvestfreeConfig(AppConfig):
@@ -88,6 +101,5 @@ class InvestfreeConfig(AppConfig):
     name = "investfree"
 
     def ready(self):
-        # Start the background thread
         thread = threading.Thread(target=fetch_stock_data, daemon=True)
         thread.start()
