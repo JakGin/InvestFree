@@ -6,6 +6,9 @@ from investfree.models import User, StockOwnership, Transaction
 def user_stock_profit(
     user: User, stock: StockOwnership, current_close_price: float
 ) -> float:
+    """
+    Deprecated. There is a new way of getting user's stock profit.
+    """
     transactions = Transaction.objects.filter(
         user=user, stock_symbol=stock.stock_symbol
     ).order_by("-date")
@@ -20,7 +23,7 @@ def user_stock_profit(
             if count_shares >= user_shares:
                 units = transaction.quantity - (count_shares - user_shares)
                 profit += units * (current_close_price - transaction.unit_price)
-                if stock.stock_symbol == "AMZN": 
+                if stock.stock_symbol == "AMZN":
                     print("current close price:", current_close_price)
                     print("transaction unit price:", transaction.unit_price)
                 return profit
@@ -69,6 +72,11 @@ def get_user_stocks(user: User) -> tuple[list, float]:
 
         money_in_stocks += current_close_price * stock.quantity
 
+        # Update profit
+        stock_profit = (
+            stock.quantity * (current_close_price - stock.last_unit_price)
+        ) + stock.profit
+
         stocks_owned_list.append(
             {
                 "stockSymbol": stock.stock_symbol,
@@ -80,7 +88,8 @@ def get_user_stocks(user: User) -> tuple[list, float]:
                     (current_close_price - current_open_price) / current_open_price
                 )
                 * 100,
-                "profit": user_stock_profit(user, stock, current_close_price),
+                # "profit": user_stock_profit(user, stock, current_close_price),
+                "profit": stock_profit,
             }
         )
 

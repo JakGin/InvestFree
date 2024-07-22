@@ -186,25 +186,32 @@ def stock(request):
                 stock_name=stock_name,
                 stock_symbol=stock["T"],
                 quantity=quantity,
+                last_unit_price=buy_unit_price,
             )
         else:
+            # Update profit
+            stock_ownership.profit += stock_ownership.quantity * (
+                buy_unit_price - stock_ownership.last_unit_price
+            )
+            stock_ownership.last_unit_price = buy_unit_price
+
             stock_ownership.quantity += quantity
 
-        transaction = Transaction.objects.create(
-            user=user,
-            type="buy",
-            stock_symbol=stock["T"],
-            stock_name=stock_name,
-            quantity=quantity,
-            unit_price=buy_unit_price,
-            transaction_price=buy_unit_price * quantity,
-        )
+        # transaction = Transaction.objects.create(
+        #     user=user,
+        #     type="buy",
+        #     stock_symbol=stock["T"],
+        #     stock_name=stock_name,
+        #     quantity=quantity,
+        #     unit_price=buy_unit_price,
+        #     transaction_price=buy_unit_price * quantity,
+        # )
 
         # Make all of db operations atomic
         with db_transaction.atomic():
             user.save()
             stock_ownership.save()
-            transaction.save()
+            # transaction.save()
 
         return JsonResponse({}, status=status.HTTP_201_CREATED)
 
@@ -259,18 +266,25 @@ def stock(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Update profit
+        stock_ownership.profit += stock_ownership.quantity * (
+            real_unit_price - stock_ownership.last_unit_price
+        )
+        stock_ownership.last_unit_price = real_unit_price
+        stock_ownership.profit *= 1 - (quantity / stock_ownership.quantity)
+
         stock_ownership.quantity -= quantity
         user.money_in_account += real_unit_price * quantity
 
-        transaction = Transaction.objects.create(
-            user=user,
-            type="sell",
-            stock_symbol=stock_symbol,
-            stock_name=stock_ownership.stock_name,
-            quantity=quantity,
-            unit_price=real_unit_price,
-            transaction_price=real_unit_price * quantity,
-        )
+        # transaction = Transaction.objects.create(
+        #     user=user,
+        #     type="sell",
+        #     stock_symbol=stock_symbol,
+        #     stock_name=stock_ownership.stock_name,
+        #     quantity=quantity,
+        #     unit_price=real_unit_price,
+        #     transaction_price=real_unit_price * quantity,
+        # )
 
         # Make all of db operations atomic
         with db_transaction.atomic():
@@ -279,7 +293,7 @@ def stock(request):
                 stock_ownership.delete()
             else:
                 stock_ownership.save()
-            transaction.save()
+            # transaction.save()
 
         return JsonResponse(
             {},
@@ -322,7 +336,7 @@ def best_players(request):
             "numberOfStocks": len(StockOwnership.objects.filter(user=user)),
             "total": user_stocks_money(user) + user.money_in_account,
         }
-        for i, user in enumerate(users)
+        for user in users
     ]
     best_players.sort(key=lambda x: x["total"], reverse=True)
     for i, player in enumerate(best_players):

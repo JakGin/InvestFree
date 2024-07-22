@@ -41,6 +41,11 @@ def fetch_stock_data():
                 if response.status_code == 200:
                     if current_data is None:
                         current_data = response.json()
+                        if current_data["queryCount"] == 0:
+                            print(
+                                f"No stock data available for {formatted_date}. Trying previous day."
+                            )
+                            current_data = None
                     # else:
                     #     previous_data = response.json()
                 else:
