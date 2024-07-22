@@ -2,7 +2,7 @@ import json
 import csv
 
 from django.contrib.auth import login, logout
-from django.db import transaction as db_transaction
+from django.db import transaction as db_transaction, IntegrityError
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,6 +15,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
 from .user import get_user_stocks
+from .validations import username_valid, email_valid, password_valid
 
 
 class UserRegister(APIView):
@@ -328,3 +329,91 @@ def best_players(request):
         player["placement"] = i + 1
 
     return JsonResponse(best_players, safe=False)
+
+
+@require_http_methods(["PUT"])
+def change_username(request):
+    """
+    Change the username of the user.
+    """
+    data = json.loads(request.body)
+    username = data["username"]
+
+    if not username_valid(username):
+        return JsonResponse(
+            {"error": "Username must be at least 3 characters long"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    user = request.user
+    user.username = username
+    try:
+        user.save()
+    except IntegrityError:
+        return JsonResponse(
+            {"error": "Username already exists"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    user.save()
+    return JsonResponse({}, status=status.HTTP_200_OK)
+
+
+@require_http_methods(["PUT"])
+def change_email(request):
+    """
+    Change the email of the user.
+    """
+    data = json.loads(request.body)
+    email = data["email"]
+
+    if not email_valid(email):
+        return JsonResponse(
+            {"error": "Invalid email"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    user = request.user
+    user.email = email
+    try:
+        user.save()
+    except IntegrityError:
+        return JsonResponse(
+            {"error": "Email already exists"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    user.save()
+    return JsonResponse({}, status=status.HTTP_200_OK)
+
+
+@require_http_methods(["PUT"])
+def change_password(request):
+    """
+    Change the password of the user.
+    """
+    data = json.loads(request.body)
+    old_password = data["oldPassword"]
+    new_password = data["newPassword"]
+    confirm_new_password = data["confirmNewPassword"]
+
+    if new_password != confirm_new_password:
+        return JsonResponse(
+            {"error": "Passwords do not match"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # Validate new password
+    if not password_valid(new_password):
+        return JsonResponse(
+            {"error": "Password does not fulfil the requirements"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    user = request.user
+    if not user.check_password(old_password):
+        return JsonResponse(
+            {"error": "Old password is incorrect"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    user.set_password(new_password)
+    user.save()
+    return JsonResponse({}, status=status.HTTP_200_OK)
