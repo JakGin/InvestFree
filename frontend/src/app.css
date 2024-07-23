@@ -72,7 +72,7 @@ input {
 }
 
 .NotFound--img {
-  background-image: url(./img/NotFound-img.gif);
+  background-image: url("/NotFound-img.gif");
   height: 400px;
   width: 100%;
   background-repeat: no-repeat;
@@ -185,7 +185,7 @@ input {
 }
 
 .Home--quotes-outer {
-  background-image: url("/src/img/stock.jpg");
+  background-image: url("/stock.jpg");
   filter: grayscale(50%);
   background-size: cover;
   background-repeat: no-repeat;
