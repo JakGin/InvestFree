@@ -103,8 +103,3 @@ class InvestfreeConfig(AppConfig):
     def ready(self):
         thread = threading.Thread(target=fetch_stock_data, daemon=True)
         thread.start()
-        print(os.getenv("DEPLOYED_FRONTEND_URL"))
-        print(os.getenv("DEPLOYED_FRONTEND_URL"))
-        print(os.getenv("DEPLOYED_FRONTEND_URL"))
-        print(os.getenv("DEPLOYED_FRONTEND_URL"))
-        print(os.getenv("DEPLOYED_FRONTEND_URL"))
