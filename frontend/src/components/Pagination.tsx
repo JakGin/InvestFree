@@ -1,7 +1,15 @@
 import React, { useState } from "react"
 import { Box, Button, HStack, Text } from "@chakra-ui/react"
 
-export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+export const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+}) => {
   const handlePrevious = () => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1)
