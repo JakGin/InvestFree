@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -68,11 +68,13 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     os.getenv("FRONTEND_URL"),
     os.getenv("FRONTEND_URL2"),
+    os.getenv("DEPLOYED_FRONTEND_URL"),
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     os.getenv("FRONTEND_URL"),
     os.getenv("FRONTEND_URL2"),
+    os.getenv("DEPLOYED_FRONTEND_URL"),
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -108,7 +110,7 @@ DATABASES = {
     # }
     "default": dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default = os.getenv("DATABASE_URL"),
+        default=os.getenv("DATABASE_URL"),
         # default="postgresql://postgres:password@localhost:5432/postgres",
         conn_max_age=600,
     )
@@ -161,10 +163,10 @@ STATIC_URL = "/static/"
 
 if not DEBUG:
     # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
     # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
     # and renames the files with unique names for each version to support long-term caching
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
