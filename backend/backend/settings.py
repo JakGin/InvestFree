@@ -65,17 +65,24 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# CORS_ALLOWED_ORIGINS = [
+#     os.getenv("FRONTEND_URL"),
+#     os.getenv("FRONTEND_URL2"),
+#     os.getenv("DEPLOYED_FRONTEND_URL"),
+# ]
 CORS_ALLOWED_ORIGINS = [
-    os.getenv("FRONTEND_URL"),
-    os.getenv("FRONTEND_URL2"),
-    os.getenv("DEPLOYED_FRONTEND_URL"),
+    "https://investfree-frontend.onrender.com/rankings",
 ]
 
+# CSRF_TRUSTED_ORIGINS = [
+#     os.getenv("FRONTEND_URL"),
+#     os.getenv("FRONTEND_URL2"),
+#     os.getenv("DEPLOYED_FRONTEND_URL"),
+# ]
 CSRF_TRUSTED_ORIGINS = [
-    os.getenv("FRONTEND_URL"),
-    os.getenv("FRONTEND_URL2"),
-    os.getenv("DEPLOYED_FRONTEND_URL"),
+    "https://investfree-frontend.onrender.com/rankings",
 ]
+
 
 CORS_ALLOW_CREDENTIALS = True
 
