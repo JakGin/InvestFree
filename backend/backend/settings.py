@@ -70,9 +70,10 @@ MIDDLEWARE = [
 #     os.getenv("FRONTEND_URL2"),
 #     os.getenv("DEPLOYED_FRONTEND_URL"),
 # ]
-CORS_ALLOWED_ORIGINS = [
-    "https://investfree-frontend.onrender.com",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "https://investfree-frontend.onrender.com",
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # CSRF_TRUSTED_ORIGINS = [
 #     os.getenv("FRONTEND_URL"),
