@@ -1,0 +1,202 @@
+{
+  "WBD": {
+    "name": "Warner Bros. Discovery, Inc.",
+    "close_price": 8.67,
+    "open_price": 8.5,
+    "high": 8.77,
+    "low": 8.38,
+    "timestamp": 1721419200000
+  },
+  "RIVN": {
+    "name": "Rivian Automotive, Inc.",
+    "close_price": 16.75,
+    "open_price": 16.5,
+    "high": 17.025,
+    "low": 16.33,
+    "timestamp": 1721419200000
+  },
+  "SIRI": {
+    "name": "Sirius XM Holdings Inc.",
+    "close_price": 3.405,
+    "open_price": 3.43,
+    "high": 3.4916,
+    "low": 3.22,
+    "timestamp": 1721419200000
+  },
+  "INTC": {
+    "name": "Intel Corporation",
+    "close_price": 32.98,
+    "open_price": 34.565,
+    "high": 34.58,
+    "low": 32.85,
+    "timestamp": 1721419200000
+  },
+  "AMD": {
+    "name": "Advanced Micro Devices, Inc.",
+    "close_price": 151.58,
+    "open_price": 154.86,
+    "high": 155.81,
+    "low": 150.62,
+    "timestamp": 1721419200000
+  },
+  "SOFI": {
+    "name": "SoFi Technologies, Inc.",
+    "close_price": 7.47,
+    "open_price": 7.5,
+    "high": 7.61,
+    "low": 7.31,
+    "timestamp": 1721419200000
+  },
+  "AAPL": {
+    "name": "Apple Inc.",
+    "close_price": 224.31,
+    "open_price": 224.82,
+    "high": 226.8,
+    "low": 223.275,
+    "timestamp": 1721419200000
+  },
+  "TSLA": {
+    "name": "Tesla, Inc.",
+    "close_price": 239.2,
+    "open_price": 247.79,
+    "high": 249.01,
+    "low": 236.83,
+    "timestamp": 1721419200000
+  },
+  "PLUG": {
+    "name": "Plug Power Inc.",
+    "close_price": 2.515,
+    "open_price": 2.47,
+    "high": 2.58,
+    "low": 2.41,
+    "timestamp": 1721419200000
+  },
+  "LCID": {
+    "name": "Lucid Group, Inc.",
+    "close_price": 3.5,
+    "open_price": 3.5,
+    "high": 3.58,
+    "low": 3.44,
+    "timestamp": 1721419200000
+  },
+  "AVGO": {
+    "name": "Broadcom Inc.",
+    "close_price": 157.35,
+    "open_price": 161.84,
+    "high": 163.95,
+    "low": 157.12,
+    "timestamp": 1721419200000
+  },
+  "TSM": {
+    "name": "Taiwan Semiconductor Manufacturing Company Limited",
+    "close_price": 165.77,
+    "open_price": 169.17,
+    "high": 170.52,
+    "low": 165.22,
+    "timestamp": 1721419200000
+  },
+  "F": {
+    "name": "Ford Motor Company",
+    "close_price": 13.98,
+    "open_price": 14.49,
+    "high": 14.5,
+    "low": 13.96,
+    "timestamp": 1721419200000
+  },
+  "BAC": {
+    "name": "Bank of America Corporation",
+    "close_price": 42.9,
+    "open_price": 42.86,
+    "high": 43.56,
+    "low": 42.69,
+    "timestamp": 1721419200000
+  },
+  "PLTR": {
+    "name": "Palantir Technologies Inc.",
+    "close_price": 28.58,
+    "open_price": 28.31,
+    "high": 29.6,
+    "low": 28.27,
+    "timestamp": 1721419200000
+  },
+  "MARA": {
+    "name": "Marathon Digital Holdings, Inc.",
+    "close_price": 24.73,
+    "open_price": 23.71,
+    "high": 25.5,
+    "low": 23.3801,
+    "timestamp": 1721419200000
+  },
+  "AMZN": {
+    "name": "Amazon.com, Inc.",
+    "close_price": 183.13,
+    "open_price": 181.14,
+    "high": 184.93,
+    "low": 180.11,
+    "timestamp": 1721419200000
+  },
+  "RIOT": {
+    "name": "Riot Platforms, Inc.",
+    "close_price": 12.03,
+    "open_price": 11.122,
+    "high": 12.11,
+    "low": 10.88,
+    "timestamp": 1721419200000
+  },
+  "NVDA": {
+    "name": "NVIDIA Corporation",
+    "close_price": 117.93,
+    "open_price": 120.35,
+    "high": 121.6,
+    "low": 117.37,
+    "timestamp": 1721419200000
+  },
+  "VFC": {
+    "name": "V.F. Corporation",
+    "close_price": 16.38,
+    "open_price": 16.12,
+    "high": 16.485,
+    "low": 15.73,
+    "timestamp": 1721419200000
+  },
+  "NIO": {
+    "name": "NIO Inc.",
+    "close_price": 4.46,
+    "open_price": 4.51,
+    "high": 4.515,
+    "low": 4.41,
+    "timestamp": 1721419200000
+  },
+  "PFE": {
+    "name": "Pfizer Inc.",
+    "close_price": 29.97,
+    "open_price": 29.94,
+    "high": 30,
+    "low": 29.5501,
+    "timestamp": 1721419200000
+  },
+  "CLSK": {
+    "name": "CleanSpark, Inc.",
+    "close_price": 17.84,
+    "open_price": 17.12,
+    "high": 18.485,
+    "low": 16.99,
+    "timestamp": 1721419200000
+  },
+  "SCHW": {
+    "name": "The Charles Schwab Corporation",
+    "close_price": 62.08,
+    "open_price": 62.67,
+    "high": 62.78,
+    "low": 61.32,
+    "timestamp": 1721419200000
+  },
+  "SNAP": {
+    "name": "Snap Inc.",
+    "close_price": 14.4,
+    "open_price": 14.51,
+    "high": 14.7399,
+    "low": 14.36,
+    "timestamp": 1721419200000
+  }
+}
