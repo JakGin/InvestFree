@@ -33,11 +33,16 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = "RENDER" not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'investfree.onrender.com',           # Your backend server URL
+    'investfree-frontend.onrender.com',  # Your frontend URL
+    'localhost',                         # Local development
+    '127.0.0.1'  
+]
 
-RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+# RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+# if RENDER_EXTERNAL_HOSTNAME:
+#     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -70,10 +75,9 @@ MIDDLEWARE = [
 #     os.getenv("FRONTEND_URL2"),
 #     os.getenv("DEPLOYED_FRONTEND_URL"),
 # ]
-# CORS_ALLOWED_ORIGINS = [
-#     "https://investfree-frontend.onrender.com",
-# ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://investfree-frontend.onrender.com",
+]
 
 # CSRF_TRUSTED_ORIGINS = [
 #     os.getenv("FRONTEND_URL"),
