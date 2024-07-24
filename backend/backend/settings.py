@@ -71,7 +71,7 @@ MIDDLEWARE = [
 #     os.getenv("DEPLOYED_FRONTEND_URL"),
 # ]
 CORS_ALLOWED_ORIGINS = [
-    "https://investfree-frontend.onrender.com/rankings",
+    "https://investfree-frontend.onrender.com",
 ]
 
 # CSRF_TRUSTED_ORIGINS = [
@@ -80,7 +80,7 @@ CORS_ALLOWED_ORIGINS = [
 #     os.getenv("DEPLOYED_FRONTEND_URL"),
 # ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://investfree-frontend.onrender.com/rankings",
+    "https://investfree-frontend.onrender.com",
 ]
 
 
