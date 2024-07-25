@@ -143,6 +143,7 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
+  align-self: center;
   padding: 1.2em 1em;
   max-width: 1000px;
 }
