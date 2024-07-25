@@ -44,10 +44,6 @@ The steps below provide exemplary commands to achieve certain operations. Keep i
 
 ### Run Frontend
 
-#### Prerequisites
-
-- Ensure you have [Node.js](https://nodejs.org/en) installed.
-
 1. Open a new terminal and navigate to the frontend folder.
 2. Create a `.env` file for environment variables in the frontend folder.
 3. Add the following line to the `.env` file: `VITE_BACKEND_URL=http://127.0.0.1:8000`
