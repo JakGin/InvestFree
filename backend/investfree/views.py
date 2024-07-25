@@ -1,5 +1,4 @@
 import json
-import csv
 
 from django.contrib.auth import login, logout
 from django.db import transaction as db_transaction, IntegrityError

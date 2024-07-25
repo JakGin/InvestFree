@@ -13,7 +13,6 @@ urlpatterns = [
     path("change_password/", views.change_password, name="change_password"),
 
     path("get_stocks_data/", views.get_stocks_data, name="get_stocks_data"),
-    # transaction POST DELETE
     path("stock/", views.stock, name="stock"),
     path("best_players/", views.best_players, name="best_players"),
 ]
